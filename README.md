@@ -1,59 +1,179 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+📘 SIPESDA
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Informasi Pelanggaran Siswa Da’il Khairaat
 
-## About Laravel
+<img width="1373" height="734" alt="image" src="https://github.com/user-attachments/assets/5b74e3ff-5b7f-43c1-8d7f-58580885270f" />
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+📌 Deskripsi Proyek
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+SIPESDA adalah aplikasi berbasis web yang digunakan untuk mencatat, memantau, dan melaporkan pelanggaran siswa secara terpusat, serta mengirimkan notifikasi otomatis kepada orang tua melalui WhatsApp.
 
-## Learning Laravel
+Aplikasi ini dirancang untuk meningkatkan pengawasan, transparansi, dan komunikasi antara pihak sekolah dan orang tua siswa.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+🎯 Tujuan
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Mencatat pelanggaran siswa secara cepat dan terstruktur
 
-## Laravel Sponsors
+Memberikan notifikasi real-time ke orang tua siswa
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Mengurangi pelanggaran berulang
 
-### Premium Partners
+Membantu guru dalam monitoring perilaku siswa
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Menyediakan laporan pelanggaran yang akurat
 
-## Contributing
+👥 Pengguna Sistem
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Admin Sekolah
 
-## Code of Conduct
+Guru BK
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Guru Piket
 
-## Security Vulnerabilities
+Orang Tua (sebagai penerima notifikasi WhatsApp)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+⚙️ Fitur Utama
+1. Manajemen Data
 
-## License
+Data Siswa
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Data Orang Tua (Nomor WhatsApp)
+
+Data Guru
+
+Jenis Pelanggaran & Poin
+
+2. Pencatatan Pelanggaran
+
+Input pelanggaran oleh Guru BK / Guru Piket
+
+Perhitungan poin otomatis
+
+Riwayat pelanggaran siswa
+
+3. Notifikasi WhatsApp
+
+Pengiriman pesan otomatis ke orang tua
+
+Template pesan dapat dikustomisasi
+
+Mendukung WhatsApp Gateway / API
+
+4. Rekap & Laporan
+
+Laporan per siswa
+
+Laporan bulanan
+
+Export PDF & Excel
+
+5. Sistem Peringatan
+
+Notifikasi jika poin melewati batas
+
+Rekomendasi tindakan (pemanggilan orang tua, skorsing, dll)
+
+🏗️ Arsitektur Sistem
+
+Aplikasi ini menggunakan Service & Repository Pattern:
+
+Controller
+   ↓
+Service (Business Logic)
+   ↓
+Repository (Query Database)
+   ↓
+Model (Eloquent ORM)
+
+🧱 Teknologi yang Digunakan
+
+Laravel 10+
+
+MySQL / MariaDB
+
+REST API
+
+WhatsApp Gateway (Fonnte / Wablas / WA Cloud API)
+
+Bootstrap / Tailwind (UI)
+
+🗂️ Struktur Folder (Ringkas)
+app/
+ ├── Models/
+ ├── Repository/
+ ├── Services/
+ ├── Http/Controllers/
+database/
+ ├── migrations/
+routes/
+ ├── api.php
+
+📄 Database Schema (Tabel Utama)
+
+users (default Laravel)
+
+siswa
+
+orang_tua
+
+jenis_pelanggaran
+
+pelanggaran
+
+batas_poin
+
+template_pesan
+
+notifikasi_wa
+
+📨 Contoh Template Pesan WhatsApp
+Yth. Bapak/Ibu Orang Tua Ananda {{nama_siswa}}
+Kami informasikan bahwa pada hari {{tanggal}},
+Ananda melakukan pelanggaran:
+
+{{jenis_pelanggaran}}
+Poin Pelanggaran : {{poin}}
+Total Poin Saat Ini : {{total_poin}}
+
+Mohon perhatian dan kerja samanya.
+Hormat kami,
+{{nama_sekolah}}
+
+🚀 Instalasi (Sementara)
+git clone https://github.com/username/sipesda.git
+cd sipesda
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan serve
+
+🔐 Role User
+Role	Akses
+Admin	Full akses
+Guru BK	Input & monitoring
+Guru Piket	Input pelanggaran
+📌 Status Proyek
+
+🟡 Development (On Going)
+
+ Database Design
+
+ Migration
+
+ Model
+
+ Repository
+
+ Service Layer
+
+ Controller API
+
+ WhatsApp Gateway
+
+ Dashboard & Laporan
+
+📚 Catatan
+
+Dokumentasi ini bersifat sementara dan akan diperbarui seiring perkembangan proyek.
