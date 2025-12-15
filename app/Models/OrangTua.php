@@ -14,7 +14,7 @@ class OrangTua extends Model
         'no_wa'
     ];
 
-    public function siswa(): BelongsTo
+    public function siswa()
     {
         return $this->belongsTo(Siswa::class);
     }
