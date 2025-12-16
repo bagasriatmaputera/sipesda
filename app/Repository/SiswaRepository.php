@@ -32,5 +32,6 @@ class SiswaRepository
     {
         $siswa = Siswa::findOrFail($siswaId);
         $siswa->delete();
+        return $siswa;
     }
 }
