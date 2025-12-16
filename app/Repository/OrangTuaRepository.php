@@ -8,7 +8,7 @@ class OrangTuaRepository
 {
     public function getAll(array $fields)
     {
-        return OrangTua::select($fields)->latest()->paginate(50);
+        return OrangTua::with('siswa')->select($fields)->latest()->paginate(50);
     }
 
     public function getById(int $id)
