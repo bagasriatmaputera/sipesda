@@ -16,6 +16,16 @@ class OrangTuaService
         return $this->repository->getBySiswaId($siswaId);
     }
 
+    public function getById(int $ortuId)
+    {
+        return $this->repository->getById($ortuId);
+    }
+
+    public function getAll($fields)
+    {
+        return $this->repository->getAll($fields ?? ['*']);
+    }
+
     public function create(array $data)
     {
         return DB::transaction(function () use ($data) {
