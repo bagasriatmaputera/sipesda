@@ -60,4 +60,20 @@ class SiswaController extends Controller
             ]);
         }
     }
+
+    public function destroy(int $siswaId)
+    {
+        try {
+            $siswa = $this->siswaService->delete($siswaId);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Delete successfully'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to delete, ' . $th->getMessage()
+            ]);
+        }
+    }
 }
