@@ -22,7 +22,7 @@ class OrangTuaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'siswa_id' => 'required|exist:siswas,id',
+            'siswa_id' => 'required|exist:siswa,id',
             'nama' => 'required|string|max:255',
             'no_wa' => 'required|min:11|unique:orang_tua,no_wa'
         ];
