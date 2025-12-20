@@ -67,7 +67,7 @@ class OrangTuaController extends Controller
     public function getBySiswa(Request $request)
     {
         $request->validate([
-            'siswa_id' => 'required|exists:siswas,id'
+            'siswa_id' => 'required|exists:siswa,id'
         ]);
 
         $data = $this->orangTuaService->getBySiswa($request->siswa_id);
