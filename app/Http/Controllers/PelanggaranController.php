@@ -75,4 +75,39 @@ class PelanggaranController extends Controller
             ]);
         }
     }
+
+    public function delete(int $id)
+    {
+        try {
+            $data = $this->pelanggaranService->delete($id);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Success delete data. '
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failde to delete data. ' . $th->getMessage()
+            ]);
+        }
+    }
+
+    public function getBySiswa(Request $request)
+    {
+        try {
+            $request->validate([
+                'siswa_id' => 'requeired|exist:siswa,id'
+            ]);
+            $data = $this->pelanggaranService->getBySiswa($request->validated());
+            return response()->json([
+                'status' => 'success',
+                'data' => new PelanggaranResource($data)
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to load data. ' . $th->getMessage()
+            ]);
+        }
+    }
 }
