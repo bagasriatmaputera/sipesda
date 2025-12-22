@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', ['admin', 'guru_bk', 'guru_piket'])
-                ->after('password');
+        Schema::create('orang_tua', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('siswa_id')->constrained('siswa')->onDelete('cascade');
+            $table->string('nama');
+            $table->string('no_wa', 15);
+            $table->timestamps();
         });
     }
 
@@ -22,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
-        });
+        Schema::dropIfExists('orang_tua');
     }
 };

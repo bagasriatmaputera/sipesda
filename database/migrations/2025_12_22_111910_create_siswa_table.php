@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orang_tua', function (Blueprint $table) {
+        Schema::create('siswa', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('siswa_id')->constrained('siswa')->cascadeOnDelete();
-            $table->string('nama');
-            $table->string('no_wa');
+            $table->string('nis')->unique();
+            $table->string('nama')->index();
+            $table->foreignId('kelas_id')->constrained('kelas');
+            $table->integer('total_poin')->default(0)->index(); // Index untuk ranking poin
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orang_tua');
+        Schema::dropIfExists('siswa');
     }
 };

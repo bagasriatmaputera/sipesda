@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('notifikasi_wa', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pelanggaran_id')->constrained('pelanggaran')->cascadeOnDelete();
+            $table->foreignId('pelanggaran_id')->constrained('pelanggaran');
             $table->string('no_tujuan');
             $table->text('pesan');
-            $table->enum('status', ['pending', 'sent', 'failed'])->default('pending');
+            $table->enum('status', ['pending', 'sent', 'failed'])->default('pending')->index();
             $table->timestamp('sent_at')->nullable();
             $table->timestamps();
         });

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('pelanggaran', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('siswa_id')->constrained('siswa')->cascadeOnDelete();
-            $table->foreignId('guru_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('siswa_id')->constrained('siswa');
+            $table->foreignId('guru_id')->constrained('users'); // Sesuai DBML Anda merujuk ke users
             $table->foreignId('jenis_pelanggaran_id')->constrained('jenis_pelanggaran');
-            $table->date('tanggal');
+            $table->date('tanggal')->index(); // Index untuk filter laporan bulanan
             $table->integer('poin');
             $table->text('keterangan')->nullable();
             $table->timestamps();
