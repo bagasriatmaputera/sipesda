@@ -10,6 +10,7 @@ class JenisPelanggaran extends Model
 
     protected $fillable = [
         'nama_pelanggaran',
+        'kategori',
         'poin'
     ];
 
