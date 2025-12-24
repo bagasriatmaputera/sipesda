@@ -25,12 +25,12 @@ class PelanggaranRequest extends FormRequest
             'siswa_id' => [
                 'required',
                 'integer',
-                'exists:siswas,id', // Pastikan ID siswa ada di tabel siswas
+                'exists:siswa,id', // Pastikan ID siswa ada di tabel siswa
             ],
             'guru_id' => [
                 'required',
                 'integer',
-                'exists:gurus,id', // Pastikan ID guru ada di tabel gurus
+                'exists:guru,id', // Pastikan ID guru ada di tabel gurus
             ],
             'jenis_pelanggaran_id' => [
                 'required',
