@@ -32,6 +32,13 @@ class PelanggaranRepository
         return Pelanggaran::create($data);
     }
 
+    public function update(int $id, array $data)
+    {
+        $pelanggaran = Pelanggaran::findOrFail($id);
+        $pelanggaran->update($data);
+        return $data;
+    }
+
     public function delete(int $id)
     {
         return Pelanggaran::findOrFail($id)->delete();
