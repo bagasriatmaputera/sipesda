@@ -38,6 +38,10 @@ class PelanggaranService
         });
     }
 
+    public function update(int $id, array $data)
+    {
+        return $this->repository->update($id, $data);
+    }
     public function getById(int $pelanggaranId)
     {
         return $this->repository->getById($pelanggaranId);
