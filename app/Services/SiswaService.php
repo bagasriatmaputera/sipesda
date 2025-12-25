@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Repository\SiswaRepository;
 use Illuminate\Support\Facades\DB;
 
-class SiswaService
+class siswaService
 {
     protected SiswaRepository $siswaRepository;
 
