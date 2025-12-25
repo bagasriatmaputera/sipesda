@@ -13,14 +13,11 @@ class Siswa extends Model
     protected $fillable = [
         'nis',
         'nama',
+        'nama_wali',
+        'no_hp_wali',
         'kelas_id',
         'total_poin'
     ];
-
-    public function orangTua()
-    {
-        return $this->hasOne(OrangTua::class);
-    }
 
     public function pelanggaran()
     {
