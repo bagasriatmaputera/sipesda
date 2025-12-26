@@ -14,6 +14,7 @@ class GuruRequest extends FormRequest
                 '*.user_id'  => 'required|exists:users,id',
                 '*.nip'      => 'required|string|unique:guru,nip',
                 '*.nama_guru' => 'required|string|max:255',
+                '*.photo' => 'nullable|mimes:jpg,jpeg,png|max:2048',
                 '*.kelas_id' => 'nullable|exists:kelas,id',
                 '*.no_hp'    => 'nullable|string|max:15',
             ];
@@ -24,6 +25,7 @@ class GuruRequest extends FormRequest
             'user_id'   => 'required|exists:users,id',
             'nip'       => 'required|string|unique:guru,nip',
             'nama_guru' => 'required|string|max:255',
+            'photo' => 'nullable|mimes:jpg,jpeg,png|max:2048',
             'kelas_id'  => 'nullable|exists:kelas,id',
             'no_hp'     => 'nullable|string|max:15',
         ];

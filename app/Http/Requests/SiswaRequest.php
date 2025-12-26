@@ -32,6 +32,12 @@ class SiswaRequest extends FormRequest
                 'unique:siswa,nis',    // Harus unik di tabel 'siswa'
             ],
 
+            'photo' => [
+                'nullable',
+                'mimes:jpg,jpeg,png',
+                'max:2048'
+            ],
+
             // Nama Siswa
             'nama' => [
                 'required',             // Wajib diisi
