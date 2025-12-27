@@ -21,6 +21,21 @@ class PelanggaranRequest extends FormRequest
      */
     public function rules(): array
     {
+        // Cek apakah input berupa array multidimensi (Bulk)
+        if ($this->has('0')) {
+            return [
+                '*' => 'required|array',
+                '*.siswa_id' => 'required|exists:siswa,id',
+                '*.guru_id' => 'required|exists:users,id',
+                '*.jenis_pelanggaran_id' => 'required|exists:jenis_pelanggaran,id',
+                '*.keterangan' => [
+                    'nullable', // Boleh kosong
+                    'string',
+                    'max:255',
+                ],
+            ];
+        }
+
         return [
             'siswa_id' => [
                 'required',
@@ -35,18 +50,18 @@ class PelanggaranRequest extends FormRequest
             'jenis_pelanggaran_id' => [
                 'required',
                 'integer',
-                'exists:jenis_pelanggarans,id', // Pastikan ID kategori pelanggaran valid
+                'exists:jenis_pelanggaran,id', // Pastikan ID kategori pelanggaran valid
             ],
-            'tanggal' => [
-                'required',
-                'date',
-                'before_or_equal:today', // Tanggal tidak boleh di masa depan
-            ],
-            'poin' => [
-                'required',
-                'integer',
-                'min:1', // Poin minimal biasanya 1
-            ],
+            // 'tanggal' => [
+            //     'required',
+            //     'date',
+            //     'before_or_equal:today', // Tanggal tidak boleh di masa depan
+            // ],
+            // 'poin' => [
+            //     'required',
+            //     'integer',
+            //     'min:1', // Poin minimal biasanya 1
+            // ],
             'keterangan' => [
                 'nullable', // Boleh kosong
                 'string',
