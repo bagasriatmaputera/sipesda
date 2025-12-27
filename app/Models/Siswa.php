@@ -14,6 +14,7 @@ class Siswa extends Model
         'nis',
         'nama',
         'nama_wali',
+        'photo',
         'no_hp_wali',
         'kelas_id',
         'total_poin'
