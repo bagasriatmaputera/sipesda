@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SiswaRequest;
+use App\Http\Resources\SiswaResource;
 use App\Services\SiswaService;
 use Illuminate\Http\Request;
 
@@ -12,11 +13,11 @@ class SiswaController extends Controller
 
     public function index()
     {
-        $fields = ['nis', 'nama', 'kelas', 'total_poin'];
+        $fields = ['nis', 'nama', 'kelas_id', 'nama_wali', 'no_hp_wali'];
         $siswa = $this->siswaService->getAll($fields ?? ['*']);
         return response()->json([
             'status' => 'success',
-            'data' => $siswa
+            'data' => SiswaResource::collection($siswa)
         ]);
     }
 
@@ -26,7 +27,7 @@ class SiswaController extends Controller
             $siswa = $this->siswaService->getById($siswaId);
             return response()->json([
                 'status' => 'success',
-                'data' => $siswa
+                'data' => new SiswaResource($siswa)
             ]);
         } catch (\Throwable $th) {
             return response()->json([
@@ -41,7 +42,7 @@ class SiswaController extends Controller
         $siswa = $this->siswaService->create($request->validated());
         return response()->json([
             'status' => 'success',
-            'message' => 'Success create siswa'
+            'data' => is_array($siswa) ? SiswaResource::collection($siswa) : new SiswaResource($siswa)
         ]);
     }
 

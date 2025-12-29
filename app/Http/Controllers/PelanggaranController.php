@@ -60,33 +60,21 @@ class PelanggaranController extends Controller
 
     public function storePelanggaran(PelanggaranRequest $request)
     {
-        return DB::transaction(function () use ($request) {
-            $poinAwal = InformasiPelanggaranSiswa::select(['id', 'poin_pelanggaran'])
-                ->where('siswa_id', $request['siswa_id'])
-                ->first();
 
-            $besarPoin = JenisPelanggaran::select(['id', 'poin'])
-                ->where('id', $request['jenis_pelanggaran_id'])->first();
-
-            try {
-                $data = $this->pelanggaranService->create($request->validated);
-
-                $infoPelSis = InformasiPelanggaranSiswa::create([
-                    'siswa_id' => $request['siswa_id'],
-                    'poin_pelanggaran' => $poinAwal += $besarPoin->poin,
-                    'tahap' => null
-                ]);
-                return response()->json([
-                    'status' => 'success',
-                    'data' => PelanggaranResource::collection($data)
-                ]);
-            } catch (\Throwable $th) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Failde to create data. ' . $th->getMessage()
-                ]);
-            }
-        });
+        try {
+            $data = $this->pelanggaranService->create($request->validated());
+            return response()->json([
+                'status' => 'success',
+                'data' => is_array($data)
+                    ? PelanggaranResource::collection(collect($data))
+                    : new PelanggaranResource($data)
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failde to create data. ' . $th->getMessage()
+            ]);
+        }
     }
 
     public function updatePelanggaran(int $id, PelanggaranRequest $request)

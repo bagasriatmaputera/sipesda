@@ -90,6 +90,7 @@ class GuruController extends Controller
             ], Response::HTTP_OK);
         } catch (Exception $e) {
             return response()->json([
+                'status' => 'error',
                 'message' => $e->getMessage()
             ], Response::HTTP_BAD_REQUEST);
         }
