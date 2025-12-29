@@ -11,23 +11,23 @@ class GuruRequest extends FormRequest
         // Cek apakah input berupa array multidimensi (Bulk)
         if ($this->has('0')) {
             return [
-                '*.user_id'  => 'required|exists:users,id',
+                '*.user_id'  => 'nullable|exists:users,id',
                 '*.nip'      => 'required|string|unique:guru,nip',
                 '*.nama_guru' => 'required|string|max:255',
                 '*.photo' => 'nullable|mimes:jpg,jpeg,png|max:2048',
                 '*.kelas_id' => 'nullable|exists:kelas,id',
-                '*.no_hp'    => 'nullable|string|max:15',
+                '*.no_hp'    => 'nullable|string|max:15|unique:guru,no_hp',
             ];
         }
 
         // Aturan untuk input Tunggal (Single)
         return [
-            'user_id'   => 'required|exists:users,id',
+            'user_id'   => 'nullbale|exists:users,id',
             'nip'       => 'required|string|unique:guru,nip',
             'nama_guru' => 'required|string|max:255',
             'photo' => 'nullable|mimes:jpg,jpeg,png|max:2048',
             'kelas_id'  => 'nullable|exists:kelas,id',
-            'no_hp'     => 'nullable|string|max:15',
+            'no_hp'     => 'nullable|string|max:15|unique:guru,no_hp',
         ];
     }
 

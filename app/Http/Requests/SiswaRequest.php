@@ -6,83 +6,50 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SiswaRequest extends FormRequest
 {
-    /**
-     * Tentukan apakah user diizinkan untuk membuat request ini.
-     *
-     * @return bool
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Dapatkan aturan validasi yang berlaku untuk request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
-     */
     public function rules(): array
     {
+        // Kondisi jika input berupa array (Bulk)
+        if ($this->has('0')) {
+            return [
+                '*.nis' => ['required', 'numeric', 'digits:10', 'unique:siswa,nis,' . $this->route('siswa')],
+                '*.photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:2048'],
+                '*.nama' => ['required', 'string', 'max:150'],
+                '*.kelas_id' => ['required', 'integer', 'exists:kelas,id'], // Sesuaikan exists ke tabel kelas
+                '*.nama_wali' => ['required', 'string', 'max:150'],
+                '*.no_hp_wali' => ['required', 'string', 'min:11', 'unique:siswa,no_hp_wali,' . $this->route('siswa')],
+            ];
+        }
+
+        // Kondisi input tunggal
         return [
-            // NIS (Nomor Induk Siswa)
-            'nis' => [
-                'required',             // Wajib diisi
-                'numeric',              // Harus berupa angka
-                'digits:10',            // Harus 10 digit
-                'unique:siswa,nis',    // Harus unik di tabel 'siswa'
-            ],
-
-            'photo' => [
-                'nullable',
-                'mimes:jpg,jpeg,png',
-                'max:2048'
-            ],
-
-            // Nama Siswa
-            'nama' => [
-                'required',             // Wajib diisi
-                'string',               // Harus berupa string
-                'max:150',              // Panjang maksimal 150 karakter
-            ],
-
-            // Kelas Siswa
-            'kelas' => [
-                'required',             // Wajib diisi
-                'string',               // Harus berupa string
-                'in:10A,10B,11A,11B,12A,12B', // Hanya nilai-nilai ini yang diizinkan
-            ],
-
-            // Total Poin
-            'total_poin' => [
-                'required',             // Wajib diisi
-                'integer',              // Harus berupa bilangan bulat
-                'min:0',                // Nilai minimal 0
-            ],
+            'nis' => ['required', 'numeric', 'digits:10', 'unique:siswa,nis,' . $this->route('siswa')],
+            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'nama' => ['required', 'string', 'max:150'],
+            'kelas_id' => ['required', 'integer', 'exists:kelas,id'],
+            'nama_wali' => ['required', 'string', 'max:150'],
+            'no_hp_wali' => ['required', 'string', 'min:11', 'unique:siswa,no_hp_wali,' . $this->route('siswa')],
         ];
     }
 
-    /**
-     * Dapatkan custom pesan error untuk aturan validasi yang didefinisikan.
-     *
-     * @return array
-     */
     public function messages(): array
     {
         return [
+            // Pesan untuk input Tunggal
             'nis.required' => 'Nomor Induk Siswa (NIS) wajib diisi.',
-            'nis.numeric' => 'NIS harus berupa angka.',
-            'nis.digits' => 'NIS harus terdiri dari 10 digit.',
             'nis.unique' => 'NIS ini sudah terdaftar.',
+            'no_hp_wali.unique' => 'Nomor HP Wali ini sudah terdaftar.',
+            'kelas_id.exists' => 'Kelas yang dipilih tidak ditemukan.',
 
-            'nama.required' => 'Nama wajib diisi.',
-            'nama.max' => 'Nama tidak boleh lebih dari 150 karakter.',
-
-            'kelas.required' => 'Kelas wajib diisi.',
-            'kelas.in' => 'Kelas tidak valid. Pilih dari daftar kelas yang tersedia.',
-
-            'total_poin.required' => 'Total poin wajib diisi.',
-            'total_poin.integer' => 'Total poin harus berupa bilangan bulat.',
-            'total_poin.min' => 'Total poin minimal adalah 0.',
+            // Pesan untuk input Bulk (menggunakan asterisk)
+            '*.nis.required' => 'NIS pada salah satu data wajib diisi.',
+            '*.nis.unique' => 'Salah satu NIS sudah terdaftar di sistem.',
+            '*.no_hp_wali.min_digits' => 'Nomor HP Wali minimal 11 digit.',
+            '*.nama.required' => 'Nama siswa wajib diisi.',
         ];
     }
 }
