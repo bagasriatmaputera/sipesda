@@ -79,56 +79,34 @@ class PelanggaranController extends Controller
 
     public function updatePelanggaran(int $id, PelanggaranRequest $request)
     {
-        return DB::transaction(function () use ($id, $request) {
-            $infoSiswa = InformasiPelanggaranSiswa::where('siswa_id', $request['siswa_id'])->first();
-
-            $poinAwal = InformasiPelanggaranSiswa::select(['id', 'poin_pelanggaran'])
-                ->where('siswa_id', $request['siswa_id'])
-                ->first();
-
-            $besarPoin = JenisPelanggaran::select(['id', 'poin'])
-                ->where('id', $request['jenis_pelanggaran_id'])->first();
-
-            try {
-                $data = $this->pelanggaranService->update($id, $request->validated());
-                $infoSiswa->update([
-                    'poin_pelanggaran' => $poinAwal += $besarPoin->poin,
-                ]);
-                return response()->json([
-                    'status' => 'success',
-                    'data' =>  new PelanggaranResource($data)
-                ]);
-            } catch (\Throwable $th) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Failde to update data. ' . $th->getMessage()
-                ]);
-            }
-        });
+        try {
+            $data = $this->pelanggaranService->update($id, $request->validated());
+            return response()->json([
+                'status' => 'success',
+                'data' =>  new PelanggaranResource($data)
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     public function deletePelanggaran(int $id)
     {
-        return DB::transaction(function () use ($id) {
-            $pelanggaran = Pelanggaran::select(['id', 'siswa_id', 'poin'])->where('id', $id)->first();
-            $infoSiswa = InformasiPelanggaranSiswa::where('siswa_id', $pelanggaran->siswa_id)->first();
-            try {
-                $data = $this->pelanggaranService->delete($id);
-
-                $infoSiswa->update([
-                    'poin_pelanggaran' => $infoSiswa->poin_pelanggaran -= $pelanggaran->poin,
-                ]);
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Success delete data. '
-                ]);
-            } catch (\Throwable $th) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Failde to delete data. ' . $th->getMessage()
-                ]);
-            }
-        });
+        try {
+            $data = $this->pelanggaranService->delete($id);
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'Success delete data. '
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failde to delete data. ' . $th->getMessage()
+            ]);
+        }
     }
 
     public function getBySiswa(Request $request)
