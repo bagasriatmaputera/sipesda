@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('siswa_id');
             $table->integer('poin_pelanggaran');
-            $table->integer('tahap')->default(1);
+            $table->enum('tahap', [1, 2, 3, 4, 5])->default(1);
+            $table->foreign('siswa_id')->references('id')->on('siswa');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('batas_poin');
+        Schema::dropIfExists('informasi_pelanggaran_siswa');
     }
 };
