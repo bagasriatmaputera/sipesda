@@ -8,12 +8,12 @@ class SiswaRepository
 {
     public function getAll(array $fields)
     {
-        return Siswa::select($fields)->latest()->paginate(50);
+        return Siswa::with('pelanggaran', 'kelas')->select($fields)->latest()->paginate(50);
     }
 
     public function getById(int $siswaId)
     {
-        return Siswa::where('id', $siswaId)->get();
+        return Siswa::with('pelanggaran', 'kelas')->where('id', $siswaId)->first();
     }
 
     public function create(array $data)
