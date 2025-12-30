@@ -17,7 +17,6 @@ class Siswa extends Model
         'photo',
         'no_hp_wali',
         'kelas_id',
-        'total_poin'
     ];
 
     public function pelanggaran()
@@ -27,6 +26,6 @@ class Siswa extends Model
 
     public function kelas()
     {
-        return $this->belongsTo(Kelas::class, 'kelas_id');
+        return $this->belongsTo(Kelas::class);
     }
 }
