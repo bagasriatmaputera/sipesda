@@ -29,6 +29,7 @@ class siswaService
     public function create(array $data)
     {
         return DB::transaction(function () use ($data) {
+            
             if (isset($data[0]) && is_array($data[0])) {
                 $result = [];
                 foreach ($data as $item) {
@@ -52,9 +53,9 @@ class siswaService
     {
         $siswa = $this->getById($id);
         if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
-            return $this->deletePhoto($siswa->photo);
+            $this->deletePhoto($siswa->photo);
+            return $data['photo'] = $this->uploadPhoto($data['photo']);
         }
-        $data['photo'] = $this->uploadPhoto($data['photo']);
         return $this->siswaRepository->update($id, $data);
     }
 
