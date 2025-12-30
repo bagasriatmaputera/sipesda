@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('guru', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->string('nip')->unique(); // Unique & Index
             $table->string('nama_guru')->index(); // Index untuk pencarian nama
+            $table->string('photo')->nullable();
             $table->foreignId('kelas_id')->nullable()->constrained('kelas')->onDelete('set null');
             $table->string('no_hp', 15)->nullable();
             $table->timestamps();
