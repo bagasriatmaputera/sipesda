@@ -19,15 +19,21 @@ class JenisPelanggaranService
     public function create(array $data)
     {
         return DB::transaction(function () use ($data) {
-            if (isset($data[0])) {
-                return collect($data)->map(
-                    fn($item) =>
-                    $this->repository->create($item)
-                );
+            if (isset($data[0]) && is_array($data[0])) {
+                $result = [];
+                foreach ($data as $jenisPel) {
+                    $result[] = $this->repository->create($jenisPel);
+                }
+                return $result;
             }
 
             return $this->repository->create($data);
         });
+    }
+
+    public function getById(int $id)
+    {
+        return $this->repository->getById($id);
     }
 
     public function update(int $id, array $data)
