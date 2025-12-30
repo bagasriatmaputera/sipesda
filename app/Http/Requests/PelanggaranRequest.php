@@ -26,9 +26,33 @@ class PelanggaranRequest extends FormRequest
             return [
                 '*' => 'required|array',
                 '*.siswa_id' => 'required|exists:siswa,id',
-                '*.guru_id' => 'required|exists:users,id',
+                '*.guru_id' => 'required|exists:guru,id',
                 '*.jenis_pelanggaran_id' => 'required|exists:jenis_pelanggaran,id',
                 '*.keterangan' => [
+                    'nullable', // Boleh kosong
+                    'string',
+                    'max:255',
+                ],
+            ];
+        }
+
+        // untuk update
+        if ($this->isMethod('patch')) {
+            return [
+                'siswa_id' => [
+                    'prohibited',
+                ],
+                'guru_id' => [
+                    'required',
+                    'integer',
+                    'exists:guru,id', // Pastikan ID guru ada di tabel gurus
+                ],
+                'jenis_pelanggaran_id' => [
+                    'required',
+                    'integer',
+                    'exists:jenis_pelanggaran,id', // Pastikan ID kategori pelanggaran valid
+                ],
+                'keterangan' => [
                     'nullable', // Boleh kosong
                     'string',
                     'max:255',
