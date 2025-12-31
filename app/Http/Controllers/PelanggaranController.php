@@ -39,13 +39,10 @@ class PelanggaranController extends Controller
         ]);
     }
 
-    public function showPelanggaran(Request $request)
+    public function showPelanggaran(int $id)
     {
-        $request->validate([
-            'pelanggaran_id' => 'required|exists:pelanggaran,id'
-        ]);
         try {
-            $data = $this->pelanggaranService->getById($request['pelanggaran_id']);
+            $data = $this->pelanggaranService->getById($id);
             return response()->json([
                 'status' => 'success',
                 'data' =>  new PelanggaranResource($data)
@@ -138,14 +135,10 @@ class PelanggaranController extends Controller
         ]);
     }
 
-    public function showJenisPelanggaran(Request $request)
+    public function showJenisPelanggaran(int $id)
     {
-        $request->validate([
-            'jenis_pelanggaran_id' => 'require|exists:jenis_pelanggaran,id'
-        ]);
-
         try {
-            $data = $this->repoJenisPelanggaran->getById($request['jenis_pelanggaran_id']);
+            $data = $this->repoJenisPelanggaran->getById($id);
             return response()->json([
                 'status' => 'success',
                 'data' => $data
