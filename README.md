@@ -158,21 +158,8 @@ Guru Piket	Input pelanggaran
 
 🟡 Development (On Going)
 
- Database Design
-
- Migration
-
- Model
-
- Repository
-
- Service Layer
-
- Controller API
-
  WhatsApp Gateway
 
- Dashboard & Laporan
 
 📚 Catatan
 
