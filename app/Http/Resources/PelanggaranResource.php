@@ -14,6 +14,31 @@ class PelanggaranResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'tanggal' => $this->tanggal,
+            'poin' => $this->poin,
+            'keterangan' => $this->keterangan,
+
+            // Mengoptimalkan objek Siswa
+            'siswa' => [
+                'id' => $this->siswa->id,
+                'nama' => $this->siswa->nama,
+                'kelas' => $this->siswa->kelas->nama_kelas ?? null,
+            ],
+
+            // Mengoptimalkan objek Guru
+            'guru' => [
+                'id' => $this->guru->id,
+                'nama' => $this->guru->nama_guru,
+            ],
+
+            // Mengoptimalkan objek Jenis Pelanggaran
+            'pelanggaran' => [
+                'id' => $this->jenisPelanggaran->id,
+                'nama' => $this->jenisPelanggaran->nama_pelanggaran,
+                'kategori' => $this->jenisPelanggaran->kategori,
+            ],
+        ];
     }
 }
