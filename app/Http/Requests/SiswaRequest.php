@@ -25,6 +25,16 @@ class SiswaRequest extends FormRequest
             ];
         }
 
+        if ($this->isMethod('patch')) {
+            return [
+                'nama' => 'nullable|string|max:150',
+                'photo' => 'nullable|mimes:jpg,jpeg,png|max:2048',
+                'kelas_id' => 'nullable|exists:kelas,id',
+                'nama_wali' => 'nullable|string|max:150',
+                'no_hp_wali' => 'nullable|string|unique:siswa,no_hp_wali,' . $this->route('siswa'),
+            ];
+        }
+
         // Kondisi input tunggal
         return [
             'nis' => ['required', 'numeric', 'digits:10', 'unique:siswa,nis,' . $this->route('siswa')],
