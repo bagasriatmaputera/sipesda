@@ -20,8 +20,7 @@ class SiswaFactory extends Factory
             'nama' => fake()->name(),
             'nama_wali' => fake()->name(),
             'no_hp_wali' => fake()->unique()->numerify('08#########'),
-            'kelas_id' => Kelas::inRandomOrder()->first()->id ?? 1, // Mengambil ID kelas yang sudah ada
-            'total_poin' => 0,
+            'kelas_id' => Kelas::inRandomOrder()->first()->id ?? 1,
         ];
     }
 }
