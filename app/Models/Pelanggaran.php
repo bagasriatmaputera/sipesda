@@ -25,7 +25,7 @@ class Pelanggaran extends Model
 
     public function guru(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'guru_id');
+        return $this->belongsTo(Guru::class);
     }
 
     public function jenisPelanggaran(): BelongsTo
