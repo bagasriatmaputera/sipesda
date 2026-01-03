@@ -31,7 +31,6 @@ class LoginRequest extends FormRequest
             'password' => [
                 'required',
                 'min:5',
-                'exists:users,password'
             ]
         ];
     }
