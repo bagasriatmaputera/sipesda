@@ -16,7 +16,12 @@ class PelanggaranRepository
 
     public function getById(int $id)
     {
-        return Pelanggaran::with(['siswa', 'guru', 'jenisPelanggaran'])
+        return Pelanggaran::with([
+            'siswa:id,nama,kelas_id',
+            'guru:id,nama_guru',
+            'siswa.kelas:id,nama_kelas',
+            'jenisPelanggaran:id,nama_pelanggaran,kategori,poin'
+        ])
             ->findOrFail($id);
     }
 
