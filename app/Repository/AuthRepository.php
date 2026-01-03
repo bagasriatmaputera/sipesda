@@ -42,7 +42,10 @@ class AuthRepository
 
     public function tokenLogin(array $data)
     {
-        if (!Auth::attempt($data['email'], $data['password'])) {
+        if (!Auth::attempt([
+            'email' => $data['email'],
+            'password' => $data['password']
+        ])) {
             return response()->json([
                 'message' => 'Invalid credentials'
             ]);
@@ -53,7 +56,7 @@ class AuthRepository
         return response()->json([
             'status' => 'succes',
             'token' => $token,
-            'data' => new UserResource($user)
+            'data' => new UserResource($user->load('roles'))
         ]);
     }
 }
