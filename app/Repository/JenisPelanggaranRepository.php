@@ -8,7 +8,7 @@ class JenisPelanggaranRepository
 {
     public function getAll(array $fields)
     {
-        return JenisPelanggaran::select($fields)->latest()->paginate(50);
+        return JenisPelanggaran::select($fields)->orderBy('poin')->paginate(50);
     }
 
     public function getById(int $id)
