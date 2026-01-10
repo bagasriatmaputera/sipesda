@@ -20,7 +20,10 @@ class DatabaseSeeder extends Seeder
             SiswaDanOrangtuaSeeder::class,
             GuruSeeder::class,
             JenisPelanggaranSeeder::class,
-            UserRoleSeeder::class
+            UserRoleSeeder::class,
+            kreteriaSeed::class,
+            tahapSeed::class,
+            BobotRuleSeed::class,
         ]);
     }
 }
