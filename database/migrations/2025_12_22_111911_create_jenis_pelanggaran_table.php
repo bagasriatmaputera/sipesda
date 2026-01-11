@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('jenis_pelanggaran', function (Blueprint $table) {
             $table->id();
             $table->string('nama_pelanggaran');
-            $table->string('kategori');
+            $table->unsignedBigInteger('tingkat_pelanggaran_id');
+            $table->foreign('tingkat_pelanggaran_id')->references('id')->on('tingkat_pelanggaran');
             $table->integer('poin');
             $table->timestamps();
         });
