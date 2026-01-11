@@ -14,18 +14,6 @@ class JenisPelanggaran extends Model
         'poin'
     ];
 
-    protected $appends = ['bobot'];
-
-    public function getBobotAttribute()
-    {
-        return match ($this->kategori) {
-            'rendah' => 1,
-            'sedang' => 2,
-            'berat' => 3,
-            default => 0
-        };
-    }
-
     public function pelanggaran()
     {
         return $this->hasMany(Pelanggaran::class);
@@ -33,6 +21,6 @@ class JenisPelanggaran extends Model
 
     public function tingkatPelanggaran()
     {
-        return $this->hasMany(TingkatPelanggaran::class);
+        return $this->belongsTo(TingkatPelanggaran::class, 'tingkat_pelanggaran_id');
     }
 }
