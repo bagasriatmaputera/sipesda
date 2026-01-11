@@ -10,12 +10,29 @@ class JenisPelanggaran extends Model
 
     protected $fillable = [
         'nama_pelanggaran',
-        'kategori',
+        'tingkat_pelanggaran_id',
         'poin'
     ];
+
+    protected $appends = ['bobot'];
+
+    public function getBobotAttribute()
+    {
+        return match ($this->kategori) {
+            'rendah' => 1,
+            'sedang' => 2,
+            'berat' => 3,
+            default => 0
+        };
+    }
 
     public function pelanggaran()
     {
         return $this->hasMany(Pelanggaran::class);
+    }
+
+    public function tingkatPelanggaran()
+    {
+        return $this->hasMany(TingkatPelanggaran::class);
     }
 }
