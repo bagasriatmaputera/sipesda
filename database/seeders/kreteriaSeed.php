@@ -17,7 +17,7 @@ class kreteriaSeed extends Seeder
         foreach ($namaKreteria as $kreteria) {
             Kriteria::create([
                 'nama' => $kreteria,
-                'kode' => 'K0' > $i++
+                'kode' => 'K0' . $i++
             ]);
         }
         ;
