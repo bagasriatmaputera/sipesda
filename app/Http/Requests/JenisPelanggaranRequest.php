@@ -24,7 +24,7 @@ class JenisPelanggaranRequest extends FormRequest
         if ($this->has('0')) {
             return [
                 '*.nama_pelanggaran' => 'required|string|min:5',
-                '*.kategori' => 'required|string|min:5',
+                '*.tingkat_pelanggaran_id' => 'required|string|min:5',
                 '*.poin' => 'required|numeric|min:1'
             ];
         }
@@ -32,13 +32,13 @@ class JenisPelanggaranRequest extends FormRequest
         if ($this->isMethod('patch')) {
             return [
                 'nama_pelanggaran' => 'required|string|min:5',
-                'kategori' => 'nullable|string|min:5',
+                'tingkat_pelanggaran_id' => 'nullable|string|min:5',
                 'poin' => 'nullable|numeric|min:1'
             ];
         }
         return [
             'nama_pelanggaran' => 'required|string|min:5',
-            'kategori' => 'required|string|min:5',
+            'tingkat_pelanggaran_id' => 'required|string|min:5',
             'poin' => 'required|numeric|min:1'
         ];
     }

@@ -6,9 +6,12 @@ use App\Models\JenisPelanggaran;
 
 class JenisPelanggaranRepository
 {
-    public function getAll(array $fields)
+    public function getAll()
     {
-        return JenisPelanggaran::select($fields)->orderBy('poin')->paginate(50);
+        return JenisPelanggaran::with(['tingkatPelanggaran:id,tingkat,nilai'])
+            ->select(['id', 'nama_pelanggaran', 'tingkat_pelanggaran_id', 'poin'])
+            ->orderBy('poin')
+            ->paginate(50);
     }
 
     public function getById(int $id)
