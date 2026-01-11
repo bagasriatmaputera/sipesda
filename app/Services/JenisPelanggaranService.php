@@ -11,9 +11,9 @@ class JenisPelanggaranService
         protected JenisPelanggaranRepository $repository
     ) {}
 
-    public function getAll(array $fields)
+    public function getAll()
     {
-        return $this->repository->getAll($fields);
+        return $this->repository->getAll();
     }
 
     public function create(array $data)
