@@ -30,7 +30,7 @@ class Pelanggaran extends Model
 
     public function jenisPelanggaran(): BelongsTo
     {
-        return $this->belongsTo(JenisPelanggaran::class);
+        return $this->belongsTo(JenisPelanggaran::class,'jenis_pelanggaran_id');
     }
 
     public function notifikasi(): BelongsTo
