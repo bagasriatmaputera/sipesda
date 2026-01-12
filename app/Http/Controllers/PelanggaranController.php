@@ -85,7 +85,7 @@ class PelanggaranController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 'error',
-                'message' => $th->getMessage()
+                'message' => 'Error Controller ' . $th->getMessage()
             ]);
         }
     }
@@ -127,8 +127,7 @@ class PelanggaranController extends Controller
 
     public function indexJenisPelanggaran()
     {
-        $fields = ['id', 'nama_pelanggaran', 'kategori'];
-        $data = $this->repoJenisPelanggaran->getAll($fields);
+        $data = $this->repoJenisPelanggaran->getAll(['*']);
         return response()->json([
             'status' => 'success',
             'data' => $data
