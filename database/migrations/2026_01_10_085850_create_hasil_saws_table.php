@@ -17,9 +17,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('siswa_id');
             $table->foreign('siswa_id')->references('id')->on('siswa');
             $table->unsignedBigInteger('tahap_id');
-            $table->foreign('tahap_id')->references('id')->on('tahaps');
-            $table->unsignedBigInteger('pelanggaran_id');
-            $table->foreign('pelanggaran_id')->references('id')->on('pelanggaran');
+            $table->foreign('tahap_id')->references('id')->on('tahaps');    
 
             $table->integer('nilai_c1'); // Poin Pelanggaran
             $table->integer('nilai_c2'); // Frekuensi
@@ -30,7 +28,7 @@ return new class extends Migration {
             $table->decimal('normalisasi_c3', 5, 4);
 
             $table->decimal('nilai_preferensi', 5, 4);
-            $table->date('periode')->nullable();
+            $table->string('periode')->nullable();
             $table->timestamps();
         });
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
