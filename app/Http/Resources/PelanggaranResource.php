@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\TingkatPelanggaran;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -37,7 +38,8 @@ class PelanggaranResource extends JsonResource
             'pelanggaran' => [
                 'id' => $this->jenisPelanggaran->id,
                 'nama' => $this->jenisPelanggaran->nama_pelanggaran,
-                'kategori' => $this->jenisPelanggaran->kategori,
+                'tingkat' => $this->jenisPelanggaran->tingkatPelanggaran->tingkat,
+                'nilai_pelanggaran' => $this->jenisPelanggaran->tingkatPelanggaran->nilai
             ],
         ];
     }
