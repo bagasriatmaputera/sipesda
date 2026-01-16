@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BobotRulesController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\PelanggaranController;
@@ -15,6 +16,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::apiResource('siswa', SiswaController::class);
 Route::apiResource('guru', GuruController::class);
 Route::apiResource('kelas', KelasController::class);
+Route::apiResource('bobot', BobotRulesController::class);
 
 // Pelanggaran
 Route::prefix('pelanggaran')->controller(PelanggaranController::class)->group(function () {
