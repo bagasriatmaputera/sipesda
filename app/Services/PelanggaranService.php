@@ -29,7 +29,6 @@ class PelanggaranService
     public function create(array $request)
     {
         return DB::transaction(function () use ($request) {
-            // 1. Cek apakah input adalah Bulk (Array of Array) atau Single
             $isBulk = isset($request[0]) && is_array($request[0]);
             $payloads = $isBulk ? $request : [$request];
 
@@ -66,48 +65,20 @@ class PelanggaranService
                 // ]);
 
                 // SAW Property
-                $jumlahPoinSiswa = Pelanggaran::where('siswa_id', $data['siswa_id'])->sum('poin');
-                $kriteriaFrekuensiSiswa = Pelanggaran::where('siswa_id', $data['siswa_id'])->count();
-                $kriteriaTingkatPelanggaran = Pelanggaran::where('siswa_id', $data['siswa_id'])
-                    ->whereHas('jenisPelanggaran.tingkatPelanggaran')
-                    ->get()
-                    ->sum(function ($pelanggaran) {
-                        return $pelanggaran->jenisPelanggaran->tingkatPelanggaran->nilai ?? 0;
-                    });
-                // $maxFreqPelanggaran = Pelanggaran::select('siswa_id')
-                //     ->groupBy('siswa_id')
-                //     ->orderByRaw('COUNT(*) desc')
-                //     ->count();
+                $nilaiC1 = $this->hasilSawRepo->getPoin($data['siswa_id']);
+                $nilaiC2 = $this->hasilSawRepo->getFrequensi($data['siswa_id']);
+                $nilaiC3 = $this->hasilSawRepo->getTotalTingkatPelanggaran($data['siswa_id']);
 
-                $BT1K1 = BobotRules::where('tahap_id', 1)->where('kriteria_id', 1)->value('bobot');
-                $BT1K2 = BobotRules::where('tahap_id', 1)->where('kriteria_id', 2)->value('bobot');
-                $BT1K3 = BobotRules::where('tahap_id', 1)->where('kriteria_id', 3)->value('bobot');
-                $BT2K1 = BobotRules::where('tahap_id', 2)->where('kriteria_id', 1)->value('bobot');
-                $BT2K2 = BobotRules::where('tahap_id', 2)->where('kriteria_id', 2)->value('bobot');
-                $BT2K3 = BobotRules::where('tahap_id', 2)->where('kriteria_id', 3)->value('bobot');
-                $BT3K1 = BobotRules::where('tahap_id', 3)->where('kriteria_id', 1)->value('bobot');
-                $BT3K2 = BobotRules::where('tahap_id', 3)->where('kriteria_id', 2)->value('bobot');
-                $BT3K3 = BobotRules::where('tahap_id', 3)->where('kriteria_id', 3)->value('bobot');
-                $BT4K1 = BobotRules::where('tahap_id', 4)->where('kriteria_id', 1)->value('bobot');
-                $BT4K2 = BobotRules::where('tahap_id', 4)->where('kriteria_id', 2)->value('bobot');
-                $BT4K3 = BobotRules::where('tahap_id', 4)->where('kriteria_id', 3)->value('bobot');
-                $BT5K1 = BobotRules::where('tahap_id', 5)->where('kriteria_id', 1)->value('bobot');
-                $BT5K2 = BobotRules::where('tahap_id', 5)->where('kriteria_id', 2)->value('bobot');
-                $BT5K3 = BobotRules::where('tahap_id', 5)->where('kriteria_id', 3)->value('bobot');
-
-                //
-                // Normalisasi Kriteria
-                // dd($jumlahPoinSiswa);
-                $normalisasiC1 = $jumlahPoinSiswa / 100; //karena 100 maksimal poin siswa
-                $normalisasiC2 = $kriteriaFrekuensiSiswa / 10; // 10 adalah batas siswa melakukan pelanggaran
-                $normalisasiC3 = ($kriteriaTingkatPelanggaran / $kriteriaFrekuensiSiswa) / 3; //karena 3 Maksimal tingkat pelanggaran siswa
+                $normalisasiPoinC1 = $this->hasilSawRepo->normalisasiPoin($data['siswa_id']);
+                $normalisaisFrequensiC2 = $this->hasilSawRepo->normalisasiFreq($data['siswa_id']);
+                $normalisasiTingkatC3 = $this->hasilSawRepo->normalisasiTingkat($data['siswa_id']);
 
                 // nilai preferensi per tahap
-                $nilaiPreferensiTahap1 = (($normalisasiC1 * $BT1K1) + ($normalisasiC2 * $BT1K2) + ($normalisasiC3 * $BT1K3));
-                $nilaiPreferensiTahap2 = (($normalisasiC1 * $BT2K1) + ($normalisasiC2 * $BT2K2) + ($normalisasiC3 * $BT2K3));
-                $nilaiPreferensiTahap3 = (($normalisasiC1 * $BT3K1) + ($normalisasiC2 * $BT3K2) + ($normalisasiC3 * $BT3K3));
-                $nilaiPreferensiTahap4 = (($normalisasiC1 * $BT4K1) + ($normalisasiC2 * $BT4K2) + ($normalisasiC3 * $BT4K3));
-                $nilaiPreferensiTahap5 = (($normalisasiC1 * $BT5K1) + ($normalisasiC2 * $BT5K2) + ($normalisasiC3 * $BT5K3));
+                $nilaiPreferensiTahap1 = $this->hasilSawRepo->nilaiPreferensiTahap1($data['siswa_id'] );
+                $nilaiPreferensiTahap2 = $this->hasilSawRepo->nilaiPreferensiTahap2( $data['siswa_id'] );
+                $nilaiPreferensiTahap3 = $this->hasilSawRepo->nilaiPreferensiTahap3( $data['siswa_id'] );
+                $nilaiPreferensiTahap4 = $this->hasilSawRepo->nilaiPreferensiTahap4( $data['siswa_id'] );
+                $nilaiPreferensiTahap5 = $this->hasilSawRepo->nilaiPreferensiTahap5( $data['siswa_id'] );
 
                 // Method SAW
                 // Data untuk semua tahap
@@ -128,12 +99,12 @@ class PelanggaranService
                             'periode' => $this->getPeriodeTahunAjaran(),
                         ],
                         [
-                            'nilai_c1' => $jumlahPoinSiswa,
-                            'nilai_c2' => $kriteriaFrekuensiSiswa,
-                            'nilai_c3' => $kriteriaTingkatPelanggaran,
-                            'normalisasi_c1' => $normalisasiC1,
-                            'normalisasi_c2' => $normalisasiC2,
-                            'normalisasi_c3' => $normalisasiC3,
+                            'nilai_c1' => $nilaiC1,
+                            'nilai_c2' => $nilaiC2,
+                            'nilai_c3' => $nilaiC3,
+                            'normalisasi_c1' => $normalisasiPoinC1,
+                            'normalisasi_c2' => $normalisaisFrequensiC2,
+                            'normalisasi_c3' => $normalisasiTingkatC3,
                             'nilai_preferensi' => $nilaiPreferensi,
                         ]
                     );
@@ -142,7 +113,6 @@ class PelanggaranService
                 $results[] = $newViolation;
 
             }
-
             return $isBulk ? $results : $results[0];
         });
     }
