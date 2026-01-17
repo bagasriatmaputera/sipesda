@@ -9,11 +9,14 @@ class GuruRepository
     public function getAll()
     {
         return Guru::select(
-            'user_id',
-            'nip',
-            'nama_guru',
-            'kelas_id',
-            'no_hp',
+            [
+                'id',
+                'user_id',
+                'nip',
+                'nama_guru',
+                'kelas_id',
+                'no_hp'
+            ]
         )->latest()->paginate(50);
     }
 

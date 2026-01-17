@@ -13,7 +13,7 @@ class SiswaController extends Controller
 
     public function index()
     {
-        $fields = ['nis', 'nama', 'kelas_id', 'nama_wali', 'no_hp_wali'];
+        $fields = ['id','nis', 'nama', 'kelas_id', 'nama_wali', 'no_hp_wali'];
         $siswa = $this->siswaService->getAll($fields ?? ['*']);
         return response()->json([
             'status' => 'success',
