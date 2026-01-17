@@ -14,6 +14,13 @@ class GuruResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id'=> $this->id,
+            'user_id' => new UserResource($this->whenLoaded('user_id')),
+            'nip' => $this->nip,
+            'nama'=> $this->nama_guru,
+            'kelas'=> new KelasResource($this->whenLoaded('kelas')),
+            'no_hp'=> $this->no_hp,
+        ];
     }
 }
