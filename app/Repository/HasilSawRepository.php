@@ -17,9 +17,25 @@ class HasilSawRepository
         return Pelanggaran::where('siswa_id', $siswaId)->sum('poin');
     }
 
+    public function getMaxPoin()
+    {
+        return Pelanggaran::selectRaw('siswa_id, SUM(poin) as total')
+            ->groupBy('siswa_id')
+            ->orderByDesc('total')
+            ->first()->total ?? 100;
+    }
+
     public function getFrequensi(int $siswaId)
     {
         return Pelanggaran::where('siswa_id', $siswaId)->count();
+    }
+
+    public function getMaxFreq()
+    {
+        return Pelanggaran::selectRaw('siswa_id, COUNT(*) as total')
+            ->groupBy('siswa_id')
+            ->orderByDesc('total')
+            ->first()->total ?? 10;
     }
 
     public function getTotalTingkatPelanggaran(int $siswaId)
@@ -31,22 +47,24 @@ class HasilSawRepository
     public function normalisasiPoin(int $siswaId)
     {
         $jumlahPoinSiswa = $this->getPoin($siswaId);
-        $normalisasiC1 = $jumlahPoinSiswa / 100;
+        $maxPoin = $this->getMaxPoin();
+        $normalisasiC1 = $jumlahPoinSiswa / $maxPoin;
         return $normalisasiC1;
     }
     public function normalisasiFreq(int $siswaId)
     {
         $kriteriaFrekuensiSiswa = $this->getFrequensi($siswaId);
-        $normalisasiC2 = $kriteriaFrekuensiSiswa / 10;
+        $maxFreq = $this->getMaxFreq();
+        $normalisasiC2 = $kriteriaFrekuensiSiswa / $maxFreq;
         return $normalisasiC2;
     }
 
     public function normalisasiTingkat(int $siswaId)
     {
         $kriteriaTingkat = $this->getTotalTingkatPelanggaran($siswaId);
-            $kriteriaFrekuensiSiswa = Pelanggaran::where('siswa_id', $siswaId)->count();
+        $kriteriaFrekuensiSiswa = Pelanggaran::where('siswa_id', $siswaId)->count();
 
-        $normalisasiC3 = $normalisasiC3 = ($kriteriaTingkat / $kriteriaFrekuensiSiswa) / 3;
+        $normalisasiC3 = ($kriteriaTingkat / $kriteriaFrekuensiSiswa) / 3;
 
         return $normalisasiC3;
     }
