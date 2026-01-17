@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\JenisPelanggaranRequest;
 use App\Http\Requests\PelanggaranRequest;
+use App\Http\Resources\JenisPelanggaranResource;
 use App\Http\Resources\PelanggaranResource;
 use App\Models\InformasiPelanggaranSiswa;
 use App\Models\JenisPelanggaran;
@@ -130,7 +131,7 @@ class PelanggaranController extends Controller
         $data = $this->repoJenisPelanggaran->getAll(['*']);
         return response()->json([
             'status' => 'success',
-            'data' => $data
+            'data' => JenisPelanggaranResource::collection($data)
         ]);
     }
 
@@ -140,7 +141,7 @@ class PelanggaranController extends Controller
             $data = $this->repoJenisPelanggaran->getById($id);
             return response()->json([
                 'status' => 'success',
-                'data' => $data
+                'data' => new JenisPelanggaranResource($data)
             ]);
         } catch (\Throwable $th) {
             return response()->json([
