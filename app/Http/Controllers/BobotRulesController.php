@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BobotRuleResoruce;
 use App\Services\BobotRulesService;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,7 @@ class BobotRulesController extends Controller
         $rules = $this->bobotService->getAll();
         return response()->json([
             'status' => 'success',
-            'data' => $rules
+            'data' => BobotRuleResoruce::collection($rules)
         ]);
     }
 
@@ -31,7 +32,7 @@ class BobotRulesController extends Controller
             $rule = $this->bobotService->create($request->all());
             return response()->json([
                 'status' => 'success',
-                'data' => $rule
+                'data' => BobotRuleResoruce::collection($rule)
             ]);
         } catch (\Throwable $th) {
             return response()->json([
@@ -47,7 +48,7 @@ class BobotRulesController extends Controller
         $rules = $this->bobotService->getById($id);
         return response()->json([
             'status' => 'success',
-            'data' => $rules
+            'data' => BobotRuleResoruce::collection($rules)
         ]);
     }
 
