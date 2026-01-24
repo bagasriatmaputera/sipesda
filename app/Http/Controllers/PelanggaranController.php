@@ -26,6 +26,7 @@ class PelanggaranController extends Controller
     public function indexPelanggaran()
     {
         $fields = [
+            'id',
             'siswa_id',
             'guru_id',
             'jenis_pelanggaran_id',
