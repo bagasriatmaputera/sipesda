@@ -12,14 +12,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class GuruController extends Controller
 {
-    protected $guruService;
-
     /**
      * Inject GuruService melalui constructor
      */
-    public function __construct(GuruService $guruService)
+    public function __construct(protected GuruService $guruService)
     {
-        $this->guruService = $guruService;
     }
 
     /**
