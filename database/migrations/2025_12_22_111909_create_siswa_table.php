@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('no_hp_wali')->unique();
             $table->foreignId('kelas_id')->constrained('kelas');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

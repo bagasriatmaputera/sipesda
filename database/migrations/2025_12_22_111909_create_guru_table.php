@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('kelas_id')->nullable()->constrained('kelas')->onDelete('set null');
             $table->string('no_hp', 15)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
