@@ -13,6 +13,15 @@ class BobotRules extends Model
         'tahap_id',
         'kriteria_id',
         'bobot'
-    
+
     ];
+
+    public function tahap()
+    {
+        return $this->belongsTo(Tahap::class);
+    }
+
+    public function kriteria(){
+        return $this->belongsTo(Kriteria::class,'kriteria_id');
+    }
 }
