@@ -5,6 +5,7 @@ use App\Http\Controllers\BobotRulesController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\PelanggaranController;
+use App\Http\Controllers\SawPropertyController;
 use App\Http\Controllers\SiswaController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,28 @@ Route::prefix('pelanggaran')->controller(PelanggaranController::class)->group(fu
     Route::patch('/jenis-pelanggaran/{id}', 'updateJenisPelanggaran');
     Route::delete('/jenis-pelanggaran/{id}', 'deleteJenisPelanggaran');
 });
+
+Route::prefix('saw')->controller(SawPropertyController::class)->group(function () {
+    Route::prefix('kriteria')->group(function () {
+        Route::get('/', 'indexTahap');
+        Route::get('/{id}', 'showTahap');
+        Route::post('/create', 'storeTahap');
+        Route::patch('/{id}', 'updateTahap');
+        Route::delete('/{id}', 'destroyTahap');
+    });
+    Route::prefix('tahap')->group(function () {
+        Route::get('/', 'indexKriteria');
+        Route::get('/{id}', 'showKriteria');
+        Route::post('/create', 'storeKriteria');
+        Route::patch('/{id}', 'updateKriteria');
+        Route::delete('/{id}', 'destroyKriteria');
+    });
+    Route::prefix('hasil')->group(function () {
+        Route::get('/', 'indexHasilSaw');
+    });
+});
+
+Route::get('/siswa/export-pdf/{id}', [SiswaController::class, 'exportPdf']);
 
 // Route SPK (Nanti kalau sudah buat)
 // Route::get('/spk/prioritas', [SPKController::class, 'index']);

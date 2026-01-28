@@ -13,7 +13,12 @@ class SiswaRepository
 
     public function getById(int $siswaId)
     {
-        return Siswa::with('pelanggaran', 'kelas')->where('id', $siswaId)->first();
+        return Siswa::with(
+            'pelanggaran',
+            'kelas',
+            'hasilSaw',
+            'hasilSaw.tahap'
+        )->where('id', $siswaId)->first();
     }
 
     public function create(array $data)

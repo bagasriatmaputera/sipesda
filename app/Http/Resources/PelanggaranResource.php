@@ -39,7 +39,7 @@ class PelanggaranResource extends JsonResource
                 'id' => $this->jenisPelanggaran->id,
                 'nama' => $this->jenisPelanggaran->nama_pelanggaran,
                 'tingkat' => $this->jenisPelanggaran->tingkatPelanggaran->tingkat,
-                'nilai_pelanggaran' => $this->jenisPelanggaran->tingkatPelanggaran->nilai
+                'nilai_pelanggaran' => $this->jenisPelanggaran->tingkatPelanggaran->nilai,
             ],
         ];
     }

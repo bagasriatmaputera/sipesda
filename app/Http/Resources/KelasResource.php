@@ -14,6 +14,11 @@ class KelasResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'nama_kelas' => $this->nama_kelas,
+            'wali_kelas' => $this->wali_kelas ?? 'Belum ada wali kelas',
+            'jumlah_siswa' => $this->siswa->count(),
+        ];
     }
 }

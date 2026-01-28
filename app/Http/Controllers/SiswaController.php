@@ -4,16 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SiswaRequest;
 use App\Http\Resources\SiswaResource;
+use App\Models\Siswa;
 use App\Services\SiswaService;
-use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class SiswaController extends Controller
 {
-    public function __construct(protected SiswaService $siswaService) {}
+    public function __construct(protected SiswaService $siswaService)
+    {
+    }
 
     public function index()
     {
-        $fields = ['id','nis', 'nama', 'kelas_id', 'nama_wali', 'no_hp_wali'];
+        $fields = ['id', 'nis', 'nama', 'kelas_id', 'nama_wali', 'no_hp_wali'];
         $siswa = $this->siswaService->getAll($fields ?? ['*']);
         return response()->json([
             'status' => 'success',
@@ -76,5 +80,17 @@ class SiswaController extends Controller
                 'message' => 'Failed to delete, ' . $th->getMessage()
             ]);
         }
+    }
+
+
+    public function exportPdf($id)
+    {
+        $siswa = Siswa::with(['pelanggaran.guru', 'pelanggaran.jenisPelanggaran', 'hasilSaw.tahap'])
+            ->findOrFail($id);
+
+        $pdf = Pdf::loadView('pdf.laporan_siswa', compact('siswa'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download("Laporan_Pelanggaran_{$siswa->nis}.pdf");
     }
 }

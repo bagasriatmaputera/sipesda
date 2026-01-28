@@ -16,6 +16,10 @@ class Tahap extends Model
         'deskripsi'
     ];
 
+    public function generateKodeTahap(){
+        
+    }
+
     public function bobot()
     {
         return $this->hasMany(BobotRules::class);

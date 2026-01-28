@@ -42,7 +42,7 @@ class GuruService
             }
 
             if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
-                $data['array'] = $this->uploadPhoto($data['photo']);
+                $data['photo'] = $this->uploadPhoto($data['photo']);
             }
 
             return $this->guruRepository->create($data);

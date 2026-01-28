@@ -23,4 +23,8 @@ class Guru extends Model
     {
         return $this->belongsTo(Kelas::class, 'kelas_id');
     }
+
+    public function users(){
+        return $this->belongsTo(User::class);
+    }
 }

@@ -12,6 +12,7 @@ class Kriteria extends Model
     protected $table = 'kriteria';
     protected $fillable = [
         'nama',
+        'kode'
     ];
 
     public function bobot (){

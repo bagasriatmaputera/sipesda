@@ -19,17 +19,6 @@ class GuruRequest extends FormRequest
                 '*.no_hp'    => 'nullable|string|max:15|unique:guru,no_hp',
             ];
         }
-
-        if ($this->isMethod('patch')) {
-            return [
-                'user_id'   => 'nullbale|exists:users,id',
-                'nama_guru' => 'nullable|string|max:255',
-                'photo' => 'nullable|mimes:jpg,jpeg,png|max:2048',
-                'kelas_id'  => 'nullable|exists:kelas,id',
-                'no_hp'     => 'nullable|string|max:15|unique:guru,no_hp' > $this->route('guru'),
-            ];
-        }
-
         // Aturan untuk input Tunggal (Single)
         return [
             'user_id'   => 'nullbale|exists:users,id',

@@ -7,17 +7,15 @@ use App\Models\HasilSaw;
 use App\Models\InformasiPelanggaranSiswa;
 use App\Models\JenisPelanggaran;
 use App\Models\Pelanggaran;
-use App\Repository\HasilSawRepository;
 use App\Repository\PelanggaranRepository;
-use App\Models\Siswa;
+use App\Repository\SawRepository;
 use Illuminate\Support\Facades\DB;
 
 class PelanggaranService
 {
     public function __construct(
         protected PelanggaranRepository $repository,
-        protected HasilSawRepository $sawRepo,
-        protected HasilSawRepository $hasilSawRepo
+        protected SawRepository $hasilSawRepo
     ) {
     }
 
@@ -35,8 +33,6 @@ class PelanggaranService
             $results = [];
 
             foreach ($payloads as $data) {
-
-
 
                 $jenis = JenisPelanggaran::findOrFail($data['jenis_pelanggaran_id']);
 
@@ -122,8 +118,6 @@ class PelanggaranService
         $bulan = now()->month;
         $tahun = now()->year;
 
-        // Jika bulan Juli-Desember: 2024/2025
-        // Jika bulan Januari-Juni: 2023/2024
         if ($bulan >= 7) {
             return $tahun . '/' . ($tahun + 1);
         } else {

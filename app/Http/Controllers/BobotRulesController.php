@@ -33,12 +33,12 @@ class BobotRulesController extends Controller
             return response()->json([
                 'status' => 'success',
                 'data' => BobotRuleResoruce::collection($rule)
-            ]);
+            ], 201);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Gagal tambah data, ' . $th->getMessage()
-            ]);
+            ], 500);
         }
 
     }
@@ -60,7 +60,6 @@ class BobotRulesController extends Controller
             'bobot' => 'required|numeric|between:0,1',
         ]);
         try {
-            //code...
             $rule = $this->bobotService->update($id, $request->all());
             return response()->json([
                 'status' => 'success',
