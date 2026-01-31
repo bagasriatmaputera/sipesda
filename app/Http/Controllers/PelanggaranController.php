@@ -14,6 +14,7 @@ use App\Services\JenisPelanggaranService;
 use App\Services\PelanggaranService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Log;
 
 class PelanggaranController extends Controller
 {
@@ -21,20 +22,31 @@ class PelanggaranController extends Controller
         protected PelanggaranService $pelanggaranService,
         protected JenisPelanggaranService $repoJenisPelanggaran,
         protected InformasiPelanggaranSiswaService $repoInformasi
-    ) {}
+    ) {
+    }
 
-    public function indexPelanggaran()
+    public function indexPelanggaran(Request $request)
     {
-        $fields = [
-            'id',
-            'siswa_id',
-            'guru_id',
-            'jenis_pelanggaran_id',
-            'tanggal',
-            'poin',
-            'keterangan'
-        ];
-        $data = $this->pelanggaranService->getAll($fields ?? ['*']);
+        $request->validate([
+            'keyword' => ['nullable', 'min:3']
+        ]);
+
+        $keyword = $request['keyword'];
+
+        if ($request['keyword']) {
+            if (strlen($request->keyword) <= 3) {
+                throw new \Exception('Masukan minimal 3 karakter untuk mencari..');
+            }
+            $data = $this->pelanggaranService->getAll($keyword);
+
+            return response()->json([
+                'status' => 'success',
+                'data' => ($data instanceof \Illuminate\Support\Collection) ? PelanggaranResource::collection($data) : new PelanggaranResource($data)
+            ]);
+
+        }
+
+        $data = $this->pelanggaranService->getAll();
         return response()->json([
             'status' => 'success',
             'data' => PelanggaranResource::collection($data)
@@ -47,7 +59,7 @@ class PelanggaranController extends Controller
             $data = $this->pelanggaranService->getById($id);
             return response()->json([
                 'status' => 'success',
-                'data' =>  new PelanggaranResource($data)
+                'data' => new PelanggaranResource($data)
             ]);
         } catch (\Throwable $th) {
             return response()->json([
@@ -82,7 +94,7 @@ class PelanggaranController extends Controller
             $data = $this->pelanggaranService->update($id, $request->validated());
             return response()->json([
                 'status' => 'success',
-                'data' =>  new PelanggaranResource($data)
+                'data' => new PelanggaranResource($data)
             ]);
         } catch (\Throwable $th) {
             return response()->json([

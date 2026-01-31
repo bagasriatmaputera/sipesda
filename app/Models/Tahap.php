@@ -13,6 +13,7 @@ class Tahap extends Model
 
     protected $fillable = [
         'nama',
+        'kode',
         'deskripsi'
     ];
 

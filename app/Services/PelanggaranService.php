@@ -19,9 +19,9 @@ class PelanggaranService
     ) {
     }
 
-    public function getAll(array $fields)
+    public function getAll(?string $keyword = '')
     {
-        return $this->repository->getAll($fields);
+        return $this->repository->getAll($keyword);
     }
 
     public function create(array $request)
@@ -70,11 +70,11 @@ class PelanggaranService
                 $normalisasiTingkatC3 = $this->hasilSawRepo->normalisasiTingkat($data['siswa_id']);
 
                 // nilai preferensi per tahap
-                $nilaiPreferensiTahap1 = $this->hasilSawRepo->nilaiPreferensiTahap1($data['siswa_id'] );
-                $nilaiPreferensiTahap2 = $this->hasilSawRepo->nilaiPreferensiTahap2( $data['siswa_id'] );
-                $nilaiPreferensiTahap3 = $this->hasilSawRepo->nilaiPreferensiTahap3( $data['siswa_id'] );
-                $nilaiPreferensiTahap4 = $this->hasilSawRepo->nilaiPreferensiTahap4( $data['siswa_id'] );
-                $nilaiPreferensiTahap5 = $this->hasilSawRepo->nilaiPreferensiTahap5( $data['siswa_id'] );
+                $nilaiPreferensiTahap1 = $this->hasilSawRepo->nilaiPreferensiTahap1($data['siswa_id']);
+                $nilaiPreferensiTahap2 = $this->hasilSawRepo->nilaiPreferensiTahap2($data['siswa_id']);
+                $nilaiPreferensiTahap3 = $this->hasilSawRepo->nilaiPreferensiTahap3($data['siswa_id']);
+                $nilaiPreferensiTahap4 = $this->hasilSawRepo->nilaiPreferensiTahap4($data['siswa_id']);
+                $nilaiPreferensiTahap5 = $this->hasilSawRepo->nilaiPreferensiTahap5($data['siswa_id']);
 
                 // Method SAW
                 // Data untuk semua tahap
@@ -297,5 +297,10 @@ class PelanggaranService
                 ]);
             }
         });
+    }
+
+    public function search(string $keyword)
+    {
+        return $this->repository->search($keyword);
     }
 }

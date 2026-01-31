@@ -21,25 +21,23 @@ class PelanggaranResource extends JsonResource
             'poin' => $this->poin,
             'keterangan' => $this->keterangan,
 
-            // Mengoptimalkan objek Siswa
             'siswa' => [
-                'id' => $this->siswa->id,
-                'nama' => $this->siswa->nama,
+                'id' => $this->siswa->id ?? null,
+                'nama' => $this->siswa->nama ?? 'Siswa Terhapus',
                 'kelas' => $this->siswa->kelas->nama_kelas ?? null,
             ],
 
-            // Mengoptimalkan objek Guru
             'guru' => [
-                'id' => $this->guru->id,
-                'nama' => $this->guru->nama_guru,
+                'id' => $this->guru->id ?? null,
+                'nama' => $this->guru->nama_guru ?? 'Mantan Guru',
             ],
 
-            // Mengoptimalkan objek Jenis Pelanggaran
             'pelanggaran' => [
-                'id' => $this->jenisPelanggaran->id,
-                'nama' => $this->jenisPelanggaran->nama_pelanggaran,
-                'tingkat' => $this->jenisPelanggaran->tingkatPelanggaran->tingkat,
-                'nilai_pelanggaran' => $this->jenisPelanggaran->tingkatPelanggaran->nilai,
+                'id' => $this->jenisPelanggaran->id ?? null,
+                'nama' => $this->jenisPelanggaran->nama_pelanggaran ?? 'Jenis Terhapus',
+                // Pastikan relasi tingkatPelanggaran sudah di-load agar tidak error
+                'tingkat' => $this->jenisPelanggaran->tingkatPelanggaran->tingkat ?? null,
+                'nilai_pelanggaran' => $this->jenisPelanggaran->tingkatPelanggaran->nilai ?? null,
             ],
         ];
     }

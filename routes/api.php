@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BobotRulesController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\PelanggaranController;
@@ -27,7 +28,6 @@ Route::prefix('pelanggaran')->controller(PelanggaranController::class)->group(fu
     Route::get('/siswa/{id}', 'getBySiswa');
     Route::patch('/update/{id}', 'updatePelanggaran');
     Route::delete('/delete/{id}', 'deletePelanggaran');
-
     // Jenis Pelanggaran
     Route::get('/jenis-pelanggaran', 'indexJenisPelanggaran');
     Route::get('/jenis-pelanggaran/{id}', 'showJenisPelanggaran');
@@ -37,14 +37,14 @@ Route::prefix('pelanggaran')->controller(PelanggaranController::class)->group(fu
 });
 
 Route::prefix('saw')->controller(SawPropertyController::class)->group(function () {
-    Route::prefix('kriteria')->group(function () {
+    Route::prefix('tahap')->group(function () {
         Route::get('/', 'indexTahap');
         Route::get('/{id}', 'showTahap');
         Route::post('/create', 'storeTahap');
         Route::patch('/{id}', 'updateTahap');
         Route::delete('/{id}', 'destroyTahap');
     });
-    Route::prefix('tahap')->group(function () {
+    Route::prefix('kriteria')->group(function () {
         Route::get('/', 'indexKriteria');
         Route::get('/{id}', 'showKriteria');
         Route::post('/create', 'storeKriteria');
@@ -54,6 +54,13 @@ Route::prefix('saw')->controller(SawPropertyController::class)->group(function (
     Route::prefix('hasil')->group(function () {
         Route::get('/', 'indexHasilSaw');
     });
+});
+
+Route::controller(DashboardController::class)->group(function () {
+    Route::get('/total-pelanggaran', 'countPelanggaran');
+    Route::get('/siswa-big-poin', 'getSiswaWith50Poin');
+    Route::get('/pelanggaran-per-week', 'pelanggaranPerWeek');
+    Route::get('/total-siswa-terlanggar', 'countSiswaWithPelanggaran');
 });
 
 Route::get('/siswa/export-pdf/{id}', [SiswaController::class, 'exportPdf']);
