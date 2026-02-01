@@ -16,11 +16,12 @@ class GuruResource extends JsonResource
     {
         return [
             'id'=> $this->id,
-            'user_id' => new UserResource($this->whenLoaded('user_id')) ?? null,
+            'user_id' => new UserResource($this->whenLoaded('users')) ?? null,
             'nip' => $this->nip,
             'nama'=> $this->nama_guru,
-            'kelas'=> new KelasResource($this->whenLoaded('kelas')) ?? '',
+            'kelas'=> new KelasResource($this->whenLoaded('kelas')) ?? null,
             'no_hp'=> $this->no_hp,
+            'photo' => $this->photo ?? null,
         ];
     }
 }

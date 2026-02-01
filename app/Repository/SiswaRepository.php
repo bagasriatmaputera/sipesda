@@ -29,7 +29,13 @@ class SiswaRepository
     public function update(int $siswaId, array $data)
     {
         $siswa = Siswa::findOrFail($siswaId);
-        $siswa->update($data);
+        $siswa->update([
+            'nama' => $data['nama'] ?? $siswa->nama,
+            'kelas_id' => $data['kelas_id'] ?? $siswa->kelas_id,
+            'nama_wali' => $data['nama_wali'] ?? $siswa->nama_wali,
+            'no_hp_wali' => $data['no_hp_wali'] ?? $siswa->no_hp_wali,
+            'photo' => $data['photo'] ?? $siswa->photo,
+        ]);
         return $siswa;
     }
 

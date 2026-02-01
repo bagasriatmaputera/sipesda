@@ -53,6 +53,7 @@ Route::prefix('saw')->controller(SawPropertyController::class)->group(function (
     });
     Route::prefix('hasil')->group(function () {
         Route::get('/', 'indexHasilSaw');
+        Route::get('/ranking', 'rankingSaw');
     });
 });
 

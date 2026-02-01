@@ -196,7 +196,16 @@ class SawRepository
         return $kriteria;
     }
 
-    public function getAllHasilSaw(){
-        return HasilSaw::with(['siswa','tahap'])->get();
+    public function getAllHasilSaw()
+    {
+        return HasilSaw::with(['siswa', 'tahap'])->get();
+    }
+
+    public function rankingSaw()
+    {
+        return HasilSaw::with(['siswa', 'tahap'])
+            ->orderBy('tahap_id', 'asc')
+            ->orderBy('nilai_preferensi', 'desc')
+            ->get();
     }
 }

@@ -14,14 +14,16 @@ class GuruService
     /**
      * Construct guruRepository
      */
-    public function __construct(protected GuruRepository $guruRepository) {}
+    public function __construct(protected GuruRepository $guruRepository)
+    {
+    }
 
     public function getAllGurus()
     {
         return $this->guruRepository->getAll();
     }
 
-    public function getGuruById(int $id)
+    public function getGuruById($id)
     {
         return $this->guruRepository->getById($id);
     }
@@ -34,7 +36,7 @@ class GuruService
                 $result = [];
                 foreach ($data as $isiGuru) {
                     if (isset($isiGuru['photo']) && $isiGuru['photo'] instanceof UploadedFile) {
-                        $isiGuru['photo'] = $this->uploadPhoto($isiGuru['photo']);
+                        $isiGuru['photo'] = $this->uploadPhoto($isiGuru['photo'], $data['nama_guru']);
                     }
                     $result[] = $this->guruRepository->create($isiGuru);
                 }
@@ -42,7 +44,7 @@ class GuruService
             }
 
             if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
-                $data['photo'] = $this->uploadPhoto($data['photo']);
+                $data['photo'] = $this->uploadPhoto($data['photo'], $data['nama_guru']);
             }
 
             return $this->guruRepository->create($data);
@@ -55,8 +57,10 @@ class GuruService
             $guru = $this->getGuruById($id);
 
             if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
-                $this->deletePhoto($guru->photo);
-                return $data['photo'] = $this->uploadPhoto($data['photo']);
+                if ($guru->photo) {
+                    $this->deletePhoto($guru->photo);
+                }
+                $data['photo'] = $this->uploadPhoto($data['photo'], $data['nama_guru'] ?? $guru->nama_guru);
             }
             return $this->guruRepository->update($id, $data);
         });
@@ -71,14 +75,16 @@ class GuruService
         }
     }
 
-    private function uploadPhoto(UploadedFile $photo)
+    private function uploadPhoto(UploadedFile $photo, string $namaGuru)
     {
-        return $photo->store('guru', 'public');
+        $extension = $photo->getClientOriginalExtension();
+        $fileName = \Illuminate\Support\Str::slug($namaGuru) . time() . '-profile.' . $extension;
+        return $photo->storeAs('photos/guru', $fileName, 'public');
     }
 
     private function deletePhoto(string $path)
     {
-        $relativePath = 'guru/' . basename($path);
+        $relativePath = 'photos/guru/' . basename($path);
         if (Storage::disk('public')->exists($relativePath)) {
             Storage::disk('public')->delete($relativePath);
         }

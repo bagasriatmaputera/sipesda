@@ -29,12 +29,12 @@ class siswaService
     public function create(array $data)
     {
         return DB::transaction(function () use ($data) {
-            
+
             if (isset($data[0]) && is_array($data[0])) {
                 $result = [];
                 foreach ($data as $item) {
                     if (isset($item['photo']) && $item['photo'] instanceof UploadedFile) {
-                        $item['photo'] = $this->uploadPhoto($item['photo']);
+                        $item['photo'] = $this->uploadPhoto($item['photo'], $data['nama']);
                     }
                     $result[] = $this->siswaRepository->create($item);
                 }
@@ -42,7 +42,7 @@ class siswaService
             }
 
             if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
-                $data['photo'] = $this->uploadPhoto($data['photo']);
+                $data['photo'] = $this->uploadPhoto($data['photo'], $data['nama']);
             }
 
             return $this->siswaRepository->create($data);
@@ -53,10 +53,19 @@ class siswaService
     {
         $siswa = $this->getById($id);
         if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
-            $this->deletePhoto($siswa->photo);
-            return $data['photo'] = $this->uploadPhoto($data['photo']);
+            if (!empty($siswa->photo)) {
+                $this->deletePhoto($siswa->photo);
+            }
+
+            $data['photo'] = $this->uploadPhoto($data['photo'], $data['nama'] ?? $siswa->nama);
         }
-        return $this->siswaRepository->update($id, $data);
+        $update = $this->siswaRepository->update($id, $data);
+        if ($update) {
+            return $update;
+        }
+
+        return throw new \Exception('Gagal Update', 422);
+
     }
 
     public function delete(int $id)
@@ -64,14 +73,19 @@ class siswaService
         return $this->siswaRepository->delete($id);
     }
 
-    private function uploadPhoto(UploadedFile $photo)
+    private function uploadPhoto(UploadedFile $photo, string $namaSiswa)
     {
-        return $photo->store('siswa', 'public');
+        $extension = $photo->getClientOriginalExtension();
+        $fileName = \Illuminate\Support\Str::slug($namaSiswa) . time() . '-profile.' . $extension;
+        return $photo->storeAs('photos/siswa', $fileName, 'public');
     }
 
     private function deletePhoto(string $path)
     {
-        $relativePath = 'siswa/' . basename($path);
+        if (!$path) {
+            return;
+        }
+        $relativePath = 'photos/siswa/' . basename($path);
         if (Storage::disk('public')->exists($relativePath)) {
             Storage::disk('public')->delete($relativePath);
         }

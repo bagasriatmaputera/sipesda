@@ -8,21 +8,13 @@ class GuruRepository
 {
     public function getAll()
     {
-        return Guru::select(
-            [
-                'id',
-                'user_id',
-                'nip',
-                'nama_guru',
-                'kelas_id',
-                'no_hp'
-            ]
-        )->latest()->paginate(50);
+        return Guru::with(['users', 'kelas'])
+            ->latest()->paginate(50);
     }
 
-    public function getById(int $id)
+    public function getById($id)
     {
-        return Guru::findOrFail($id);
+        return Guru::with(['users', 'kelas'])->findOrFail($id);
     }
 
     public function create(array $data)
@@ -33,7 +25,13 @@ class GuruRepository
     public function update(int $id, array $data)
     {
         $guru = Guru::findOrFail($id);
-        $guru->update($data);
+        $guru->update([
+            'nama_guru' => $data['nama_guru'] ?? $guru->nama_guru,
+            'nip' => $data['nip'] ?? $guru->nip,
+            'photo' => $data['photo'] ?? $guru->photo,
+            'kelas_id' => $data['kelas_id'] ?? $guru->kelas_id,
+            'no_hp' => $data['no_hp'] ?? $guru->no_hp,
+        ]);
         return $guru;
     }
 

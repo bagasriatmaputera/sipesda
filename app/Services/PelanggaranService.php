@@ -167,7 +167,8 @@ class PelanggaranService
                         'guru_id' => $data['guru_id'],
                         'jenis_pelanggaran_id' => $data['jenis_pelanggaran_id'],
                         'keterangan' => $data['keterangan'],
-                        'poin' => $besarPoin->poin
+                        'poin' => $besarPoin->poin,
+                        'tanggal' =>$data['tanggal'],
                     ]);
                     // Informasi Pelanggaran Siswa
                     // $infoSiswa->update([

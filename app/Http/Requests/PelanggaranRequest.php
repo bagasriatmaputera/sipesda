@@ -57,6 +57,10 @@ class PelanggaranRequest extends FormRequest
                     'string',
                     'max:255',
                 ],
+                'tanggal' => [
+                    'nullable',
+                    'date'
+                ]
             ];
         }
 
