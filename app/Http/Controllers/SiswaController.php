@@ -62,7 +62,7 @@ class SiswaController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed update data, ' . $th->getMessage()
-            ]);
+            ], 500);
         }
     }
 

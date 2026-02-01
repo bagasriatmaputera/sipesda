@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\HasilSawResource;
+use App\Http\Resources\RankingResource;
 use App\Repository\SawRepository;
+use FontLib\TrueType\Collection;
 use Illuminate\Http\Request;
 
 class SawPropertyController extends Controller
@@ -143,6 +145,17 @@ class SawPropertyController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => HasilSawResource::collection($hasilSaw)
+        ]);
+    }
+
+    public function rankingSaw()
+    {
+        $ranking = $this->sawRepo->rankingSaw();
+        return response()->json([
+            'status' => 'success',
+            'data' => ($ranking instanceof \Illuminate\Support\Collection) ?
+                RankingResource::collection($ranking) :
+                new RankingResource($ranking)
         ]);
     }
 

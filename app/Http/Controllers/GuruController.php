@@ -41,7 +41,7 @@ class GuruController extends Controller
         try {
             $data = $this->guruService->storeGuru($request->validated());
 
-            $resource = ($data instanceof \Illuminate\Support\Collection || is_array($data))
+            $resource = ($data instanceof \Illuminate\Support\Collection)
                 ? GuruResource::collection($data)
                 : new GuruResource($data);
 
@@ -59,11 +59,12 @@ class GuruController extends Controller
     /**
      * Menampilkan detail satu guru
      */
-    public function show(int $id)
+    public function show($id)
     {
         try {
             $guru = $this->guruService->getGuruById($id);
             return response()->json([
+                'status' => 'success',
                 'data' => new GuruResource($guru)
             ], Response::HTTP_OK);
         } catch (Exception $e) {
