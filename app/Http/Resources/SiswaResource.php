@@ -21,7 +21,15 @@ class SiswaResource extends JsonResource
             'kelas' => $this->kelas->nama_kelas ?? 'Tanpa Kelas',
             'nama_wali' => $this->nama_wali,
             'no_hp_wali' => $this->no_hp_wali,
-
+            'total_poin' => $this->pelanggaran->sum('poin'),
+            'tindakan_disiplin' => $this->whenLoaded('hasilSaw', function () {
+                return $this->hasilSaw
+                    ->filter(function ($r) {
+                        return $r->nilai_preferensi >= 0.75;
+                    })
+                    ->sortByDesc('nilai_preferensi')
+                    ->first();
+            }),
             'pelanggaran' => $this->whenLoaded('pelanggaran', function () {
                 return $this->pelanggaran->map(function ($p) {
                     return [
@@ -41,7 +49,7 @@ class SiswaResource extends JsonResource
                         ]
                     ];
                 });
-            }),
+            }) ?? null,
 
             'saw' => $this->whenLoaded('hasilSaw', function () {
                 return $this->hasilSaw->map(function ($s) {

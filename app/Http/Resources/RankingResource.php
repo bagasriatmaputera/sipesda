@@ -16,6 +16,7 @@ class RankingResource extends JsonResource
     {
         return [
             'tahap_id' => $this->tahap_id,
+            'deskripsi' => $this->tahap->deskripsi,
             'nama_siswa' => $this->siswa->nama ?? 'Siswa Terhapus',
             'tahap' => $this->tahap->nama ?? '-',
             'nilai_preferensi' => $this->nilai_preferensi,

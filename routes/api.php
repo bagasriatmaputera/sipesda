@@ -62,6 +62,7 @@ Route::controller(DashboardController::class)->group(function () {
     Route::get('/siswa-big-poin', 'getSiswaWith50Poin');
     Route::get('/pelanggaran-per-week', 'pelanggaranPerWeek');
     Route::get('/total-siswa-terlanggar', 'countSiswaWithPelanggaran');
+    Route::get('/chart-by-month', 'pelanggaranPerMonth');
 });
 
 Route::get('/siswa/export-pdf/{id}', [SiswaController::class, 'exportPdf']);

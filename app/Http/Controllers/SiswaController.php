@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SiswaRequest;
 use App\Http\Resources\SiswaResource;
+use App\Models\Pelanggaran;
 use App\Models\Siswa;
 use App\Services\SiswaService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Log;
 
 
 class SiswaController extends Controller
@@ -17,8 +19,7 @@ class SiswaController extends Controller
 
     public function index()
     {
-        $fields = ['id', 'nis', 'nama', 'kelas_id', 'nama_wali', 'no_hp_wali'];
-        $siswa = $this->siswaService->getAll($fields ?? ['*']);
+        $siswa = $this->siswaService->getAll();
         return response()->json([
             'status' => 'success',
             'data' => SiswaResource::collection($siswa)
@@ -85,8 +86,13 @@ class SiswaController extends Controller
 
     public function exportPdf($id)
     {
-        $siswa = Siswa::with(['pelanggaran.guru', 'pelanggaran.jenisPelanggaran', 'hasilSaw.tahap'])
+
+        $dataSiswa = Siswa::with('pelanggaran', 'kelas', 'hasilSaw')
             ->findOrFail($id);
+
+        $siswa = new SiswaResource($dataSiswa);
+
+        Log::info($siswa);
 
         $pdf = Pdf::loadView('pdf.laporan_siswa', compact('siswa'))
             ->setPaper('a4', 'portrait');

@@ -45,4 +45,13 @@ class DashboardController extends Controller
             'data' => $data,
         ]);
     }
+
+    public function pelanggaranPerMonth()
+    {
+        $data = $this->repo->getChartData();
+        return response()->json([
+            'status' => 'success',
+            'data' => $data,
+        ]);
+    }
 }

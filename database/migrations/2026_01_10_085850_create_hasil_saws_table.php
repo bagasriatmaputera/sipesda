@@ -11,7 +11,6 @@ return new class extends Migration {
     public function up(): void
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        // my table definitions go here
         Schema::create('hasil_saw', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('siswa_id');

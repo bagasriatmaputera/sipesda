@@ -16,9 +16,9 @@ class siswaService
         $this->siswaRepository = $siswaRepository;
     }
 
-    public function getAll(array $fields)
+    public function getAll()
     {
-        return $this->siswaRepository->getAll($fields);
+        return $this->siswaRepository->getAll();
     }
 
     public function getById(int $id)

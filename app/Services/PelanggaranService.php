@@ -145,19 +145,6 @@ class PelanggaranService
                 throw new \Exception('Data tidak ada');
             }
 
-            // $infoSiswa = InformasiPelanggaranSiswa::where('siswa_id', $pelanggaran->siswa_id)->first();
-
-            // if (!$infoSiswa) {
-            //     throw new \Exception('Data siswa tidak ada');
-            // }
-
-            // Kurangi Poin Pelanggaran Siswa
-            // $poinNetral = $infoSiswa->poin_pelanggaran - $pelanggaran->poin;
-
-
-
-            // $poinSekarang = $poinNetral + $besarPoin->poin;
-
             try {
                 // Pelanggaran
                 return DB::transaction(function () use ($data, $pelanggaran) {
@@ -168,15 +155,8 @@ class PelanggaranService
                         'jenis_pelanggaran_id' => $data['jenis_pelanggaran_id'],
                         'keterangan' => $data['keterangan'],
                         'poin' => $besarPoin->poin,
-                        'tanggal' =>$data['tanggal'],
+                        'tanggal' => $data['tanggal'],
                     ]);
-                    // Informasi Pelanggaran Siswa
-                    // $infoSiswa->update([
-                    //     'poin_pelanggaran' => $poinSekarang
-                    // ]);
-
-                    // Perhitungan SAW
-                    // SAW Property
                     $jumlahPoinSiswa = Pelanggaran::where('siswa_id', $pelanggaran->siswa_id)->sum('poin');
                     $kriteriaFrekuensiSiswa = Pelanggaran::where('siswa_id', $pelanggaran->siswa_id)->count();
                     $kriteriaTingkatPelanggaran = Pelanggaran::where('siswa_id', $pelanggaran->siswa_id)
@@ -185,10 +165,6 @@ class PelanggaranService
                         ->sum(function ($tingkat) {
                             return $tingkat->jenisPelanggaran->tingkatPelanggaran->nilai ?? 0;
                         });
-                    // $maxFreqPelanggaran = Pelanggaran::select('siswa_id')
-                    //     ->groupBy('siswa_id')
-                    //     ->orderByRaw('COUNT(*) desc')
-                    //     ->count();
 
                     $BT1K1 = BobotRules::where('tahap_id', 1)->where('kriteria_id', 1)->value('bobot');
                     $BT1K2 = BobotRules::where('tahap_id', 1)->where('kriteria_id', 2)->value('bobot');
@@ -206,10 +182,6 @@ class PelanggaranService
                     $BT5K2 = BobotRules::where('tahap_id', 5)->where('kriteria_id', 2)->value('bobot');
                     $BT5K3 = BobotRules::where('tahap_id', 5)->where('kriteria_id', 3)->value('bobot');
 
-
-                    //
-                    // Normalisasi Kriteria
-                    // dd($jumlahPoinSiswa);
                     $normalisasiC1 = $jumlahPoinSiswa / 100; //karena 100 maksimal poin siswa
                     $normalisasiC2 = $kriteriaFrekuensiSiswa / 10; // 10 adalah batas siswa melakukan pelanggaran
                     $normalisasiC3 = ($kriteriaTingkatPelanggaran / $kriteriaFrekuensiSiswa) / 3; //karena 3 Maksimal tingkat pelanggaran siswa
@@ -275,27 +247,64 @@ class PelanggaranService
         return $this->repository->getBySiswaId($siswaId);
     }
 
+    private function refreshSiswaSawData(int $siswaId)
+    {
+        // 1. Ambil data agregat terbaru setelah perubahan (create/update/delete)
+        $jumlahPoinSiswa = Pelanggaran::where('siswa_id', $siswaId)->sum('poin');
+        $kriteriaFrekuensiSiswa = Pelanggaran::where('siswa_id', $siswaId)->count();
+        $kriteriaTingkatPelanggaran = Pelanggaran::where('siswa_id', $siswaId)
+            ->whereHas('jenisPelanggaran.tingkatPelanggaran')
+            ->with('jenisPelanggaran.tingkatPelanggaran')
+            ->get()
+            ->sum(fn($p) => $p->jenisPelanggaran->tingkatPelanggaran->nilai ?? 0);
+
+        // 2. Normalisasi (Gunakan pengecekan agar tidak pembagian dengan nol)
+        $normalisasiC1 = $jumlahPoinSiswa / 100;
+        $normalisasiC2 = $kriteriaFrekuensiSiswa / 10;
+        $normalisasiC3 = $kriteriaFrekuensiSiswa > 0
+            ? ($kriteriaTingkatPelanggaran / $kriteriaFrekuensiSiswa) / 3
+            : 0;
+
+        for ($tahapId = 1; $tahapId <= 5; $tahapId++) {
+            $bobot = BobotRules::where('tahap_id', $tahapId)->pluck('bobot', 'kriteria_id');
+
+            $nilaiPreferensi = ($normalisasiC1 * ($bobot[1] ?? 0)) +
+                ($normalisasiC2 * ($bobot[2] ?? 0)) +
+                ($normalisasiC3 * ($bobot[3] ?? 0));
+
+            HasilSaw::updateOrCreate(
+                [
+                    'siswa_id' => $siswaId,
+                    'tahap_id' => $tahapId,
+                    'periode' => $this->getPeriodeTahunAjaran(),
+                ],
+                [
+                    'nilai_c1' => $jumlahPoinSiswa,
+                    'nilai_c2' => $kriteriaFrekuensiSiswa,
+                    'nilai_c3' => $kriteriaTingkatPelanggaran,
+                    'normalisasi_c1' => $normalisasiC1,
+                    'normalisasi_c2' => $normalisasiC2,
+                    'normalisasi_c3' => $normalisasiC3,
+                    'nilai_preferensi' => $nilaiPreferensi,
+                ]
+            );
+        }
+    }
+
     public function delete(int $id)
     {
         return DB::transaction(function () use ($id) {
-            $pelanggaran = Pelanggaran::select(['id', 'siswa_id', 'poin'])->where('id', $id)->first();
+            $pelanggaran = Pelanggaran::findOrFail($id);
+            $siswaId = $pelanggaran->siswa_id;
 
-            if (!$pelanggaran) {
-                throw new \Exception('Data pelanggaran tidak ada.');
-            }
-
-            // $infoSiswa = InformasiPelanggaranSiswa::where('siswa_id', $pelanggaran->siswa_id)->first();
             try {
-                $data = $this->repository->delete($id);
-                // $infoSiswa->update([
-                //     'poin_pelanggaran' => $infoSiswa->poin_pelanggaran -= $pelanggaran->poin,
-                // ]);
-                // return $infoSiswa;
+                $this->repository->delete($id);
+
+                $this->refreshSiswaSawData($siswaId);
+
+                return true;
             } catch (\Throwable $th) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Failed delete data, ' . $th->getMessage()
-                ]);
+                throw new \Exception('Gagal menghapus dan update SAW: ' . $th->getMessage());
             }
         });
     }

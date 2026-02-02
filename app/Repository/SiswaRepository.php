@@ -6,9 +6,9 @@ use App\Models\Siswa;
 
 class SiswaRepository
 {
-    public function getAll(array $fields)
+    public function getAll()
     {
-        return Siswa::with('pelanggaran', 'kelas')->select($fields)->latest()->paginate(50);
+        return Siswa::with('pelanggaran', 'kelas', 'hasilSaw')->latest()->paginate(50);
     }
 
     public function getById(int $siswaId)
