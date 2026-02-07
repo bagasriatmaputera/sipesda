@@ -22,4 +22,8 @@ class AuthService
     {
         return $this->authRepository->tokenLogin($data);
     }
+
+    public function tokenLogout(){
+        return $this->authRepository->tokenLogout();
+    }
 }

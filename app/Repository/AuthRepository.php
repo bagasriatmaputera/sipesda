@@ -48,7 +48,7 @@ class AuthRepository
         ])) {
             return response()->json([
                 'message' => 'Invalid credentials'
-            ]);
+            ],500);
         }
 
         $user = Auth::user();
@@ -58,5 +58,14 @@ class AuthRepository
             'token' => $token,
             'data' => new UserResource($user->load('roles'))
         ]);
+    }
+
+    public function tokenLogout(){
+        $user = Auth::user();
+
+        if ($user) {
+            return $user->currentAccessToken()->delete();
+        } 
+        return false;
     }
 }

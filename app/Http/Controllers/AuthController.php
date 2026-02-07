@@ -42,4 +42,12 @@ class AuthController extends Controller
     {
         return response()->json(['data' => new UserResource($request->user())]);
     }
+
+    public function tokenLogout(){
+        $logout = $this->authService->tokenLogout();
+        return response([
+            'status' => 'Succes',
+            'message' => 'Successfully logout'
+        ]);
+    }
 }
