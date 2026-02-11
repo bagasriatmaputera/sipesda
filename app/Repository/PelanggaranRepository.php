@@ -72,4 +72,17 @@ class PelanggaranRepository
             $q->orWhere('nis', 'LIKE', '%' . $keyword . '%');
         })->latest()->get();
     }
+
+    public function sendMessages($nomorWali, $namaSiswa, $totalPoin, $tahap)
+    {
+
+        $message = "Assalamu’alaikum Warahmatullahi Wabarakatuh.\n\n" .
+            "Pemberitahuan dari SIPESDA MTs Da'il Khairaat.\n\n" .
+            "Menginformasikan bahwa saat ini siswa atas nama *{$namaSiswa}*, berada di *{$tahap}* dikarenakan akumulasi poin pelanggaran sebesar *{$totalPoin}*.\n\n" .
+            "Mohon Bapak/Ibu Wali Murid dapat memberikan perhatian lebih serta bimbingan kepada ananda di rumah agar tidak melakukan pelanggaran tambahan yang dapat mengakibatkan konsekuensi lebih lanjut.\n\n" .
+            "Atas perhatian dan kerjasamanya, kami ucapkan terima kasih.\n\n" .
+            "Wassalamu’alaikum Warahmatullahi Wabarakatuh.";
+
+        return $whatsappUrl = "https://wa.me/" . $nomorWali . "?text=" . urlencode($message);
+    }
 }
