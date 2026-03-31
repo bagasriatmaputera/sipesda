@@ -49,15 +49,13 @@ class SawRepository
     public function normalisasiPoin(int $siswaId)
     {
         $jumlahPoinSiswa = $this->getPoin($siswaId);
-        $maxPoin = $this->getMaxPoin();
-        $normalisasiC1 = $jumlahPoinSiswa / $maxPoin;
+        $normalisasiC1 = $jumlahPoinSiswa / 100; // 100 adalah maksimal poin siswa
         return $normalisasiC1;
     }
     public function normalisasiFreq(int $siswaId)
     {
         $kriteriaFrekuensiSiswa = $this->getFrequensi($siswaId);
-        $maxFreq = $this->getMaxFreq();
-        $normalisasiC2 = $kriteriaFrekuensiSiswa / $maxFreq;
+        $normalisasiC2 = $kriteriaFrekuensiSiswa / 10; // 10 adalah batas siswa melakukan pelanggaran
         return $normalisasiC2;
     }
 
@@ -66,14 +64,16 @@ class SawRepository
         $kriteriaTingkat = $this->getTotalTingkatPelanggaran($siswaId);
         $kriteriaFrekuensiSiswa = Pelanggaran::where('siswa_id', $siswaId)->count();
 
-        $normalisasiC3 = ($kriteriaTingkat / $kriteriaFrekuensiSiswa) / 3;
+        if ($kriteriaFrekuensiSiswa == 0) {
+            return 0;
+        }
 
+        $normalisasiC3 = ($kriteriaTingkat / $kriteriaFrekuensiSiswa) / 3; // 3 adalah maksimal tingkat pelanggaran
         return $normalisasiC3;
     }
 
     public function nilaiPreferensiTahap1(int $siswaId)
     {
-        // Ambil bobot untuk tindakan Tahap 1
         $bobotC1 = $this->getBobotRule(1, 1);
         $bobotC2 = $this->getBobotRule(1, 2);
         $bobotC3 = $this->getBobotRule(1, 3);
@@ -88,7 +88,6 @@ class SawRepository
     }
     public function nilaiPreferensiTahap2(int $siswaId)
     {
-        // Ambil bobot untuk tindakan Tahap 1
         $bobotC1 = $this->getBobotRule(2, 1);
         $bobotC2 = $this->getBobotRule(2, 2);
         $bobotC3 = $this->getBobotRule(2, 3);
@@ -103,7 +102,6 @@ class SawRepository
     }
     public function nilaiPreferensiTahap3(int $siswaId)
     {
-        // Ambil bobot untuk tindakan Tahap 1
         $bobotC1 = $this->getBobotRule(3, 1);
         $bobotC2 = $this->getBobotRule(3, 2);
         $bobotC3 = $this->getBobotRule(3, 3);
@@ -118,7 +116,6 @@ class SawRepository
     }
     public function nilaiPreferensiTahap4(int $siswaId)
     {
-        // Ambil bobot untuk tindakan Tahap 1
         $bobotC1 = $this->getBobotRule(4, 1);
         $bobotC2 = $this->getBobotRule(4, 2);
         $bobotC3 = $this->getBobotRule(4, 3);
@@ -133,7 +130,6 @@ class SawRepository
     }
     public function nilaiPreferensiTahap5(int $siswaId)
     {
-        // Ambil bobot untuk tindakan Tahap 1
         $bobotC1 = $this->getBobotRule(5, 1);
         $bobotC2 = $this->getBobotRule(5, 2);
         $bobotC3 = $this->getBobotRule(5, 3);
@@ -145,6 +141,29 @@ class SawRepository
         $nilaiPreferensiTahap5 = (($normalisasiC1 * $bobotC1) + ($normalisasiC2 * $bobotC2) + ($normalisasiC3 * $bobotC3));
 
         return $nilaiPreferensiTahap5;
+    }
+
+    public function getAllNilaiPreferensi(int $siswaId)
+    {
+        return [
+            1 => $this->nilaiPreferensiTahap1($siswaId),
+            2 => $this->nilaiPreferensiTahap2($siswaId),
+            3 => $this->nilaiPreferensiTahap3($siswaId),
+            4 => $this->nilaiPreferensiTahap4($siswaId),
+            5 => $this->nilaiPreferensiTahap5($siswaId),
+        ];
+    }
+
+    public function getNilaiNormalisasi(int $siswaId)
+    {
+        return [
+            'nilai_c1' => $this->getPoin($siswaId),
+            'nilai_c2' => $this->getFrequensi($siswaId),
+            'nilai_c3' => $this->getTotalTingkatPelanggaran($siswaId),
+            'normalisasi_c1' => $this->normalisasiPoin($siswaId),
+            'normalisasi_c2' => $this->normalisasiFreq($siswaId),
+            'normalisasi_c3' => $this->normalisasiTingkat($siswaId),
+        ];
     }
 
     public function getAllTahap()
