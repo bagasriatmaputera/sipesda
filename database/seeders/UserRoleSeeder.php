@@ -34,7 +34,7 @@ class UserRoleSeeder extends Seeder
             $akun = User::create([
                 'name' => ucfirst($akunUser) . 'User',
                 'email' => $akunUser . '@contoh.com',
-                'password' => Hash::make(12345678)
+                'password' => Hash::make("password")
             ]);
 
             $akun->assignRole($akunUser);
