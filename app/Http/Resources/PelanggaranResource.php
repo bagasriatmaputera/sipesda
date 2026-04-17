@@ -13,8 +13,23 @@ class PelanggaranResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+    private function getValidNumber($number) {
+            $number = preg_replace('/[^0-9]/', '', $number);
+
+            if (str_starts_with($number, '0')) {
+                $number = '62' . substr($number, 1);
+            } 
+            elseif (str_starts_with($number, '8')) {
+                $number = '62' . $number;
+            }
+
+            return $number;
+                }
+
     public function toArray(Request $request): array
     {
+        
+            
         return [
             'id' => $this->id,
             'tanggal' => $this->tanggal,
@@ -25,6 +40,7 @@ class PelanggaranResource extends JsonResource
                 'id' => $this->siswa->id ?? null,
                 'nama' => $this->siswa->nama ?? 'Siswa Terhapus',
                 'kelas' => $this->siswa->kelas->nama_kelas ?? null,
+                'no_wali' => $this->getValidNumber($this->siswa->no_hp_wali) ?? null,
             ],
 
             'guru' => [

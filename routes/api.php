@@ -53,6 +53,13 @@ Route::middleware(['auth:sanctum'])->group(function (){
             Route::patch('/{id}', 'updateKriteria');
             Route::delete('/{id}', 'destroyKriteria');
         });
+        Route::prefix('bobot')->group(function () {
+            Route::get('/', 'indexBobot');
+            Route::get('/{id}', 'showBobot');
+            Route::post('/create', 'storeBobot');
+            Route::patch('/{id}', 'updateBobot');
+            Route::delete('/{id}', 'destroyBobot');
+        });
         Route::prefix('hasil')->group(function () {
             Route::get('/', 'indexHasilSaw');
             Route::get('/ranking', 'rankingSaw');

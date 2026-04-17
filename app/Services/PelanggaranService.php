@@ -109,18 +109,6 @@ class PelanggaranService
             default => false,
         };
     }
-    private function tentukanTahap($poin)
-    {
-        if ($poin <= 30)
-            return 1;
-        if ($poin <= 50)
-            return 2;
-        if ($poin <= 75)
-            return 3;
-        if ($poin <= 100)
-            return 4;
-        return 5;
-    }
 
     public function update(int $id, array $data)
     {

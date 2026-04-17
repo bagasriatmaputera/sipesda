@@ -223,8 +223,69 @@ class SawRepository
     public function rankingSaw()
     {
         return HasilSaw::with(['siswa', 'tahap'])
-            ->orderBy('tahap_id', 'asc')
-            ->orderBy('nilai_preferensi', 'desc')
-            ->get();
+        ->where('nilai_preferensi', '>=', 0.75)
+        ->orderBy('tahap_id', 'desc')
+        ->orderBy('nilai_preferensi', 'desc')
+        ->get()
+        ->unique('siswa_id');
+    }
+
+    // BobotRules CRUD Functions
+    public function getAllBobot()
+    {
+        return BobotRules::with(['tahap', 'kriteria'])->get();
+    }
+
+    public function getByIdBobot(int $idBobot)
+    {
+        return BobotRules::with(['tahap', 'kriteria'])->findOrFail($idBobot);
+    }
+
+    public function storeBobot(array $data)
+    {
+        // Check if combination already exists
+        $exists = BobotRules::where('tahap_id', $data['tahap_id'])
+            ->where('kriteria_id', $data['kriteria_id'])
+            ->exists();
+
+        if ($exists) {
+            throw new \Exception('Kombinasi tahap dan kriteria sudah ada');
+        }
+
+        // Check total weight for the tahap
+        $currentTotal = BobotRules::where('tahap_id', $data['tahap_id'])->sum('bobot');
+        $newTotal = $currentTotal + $data['bobot'];
+
+        if ($newTotal > 1.0) {
+            throw new \Exception("Total bobot untuk tahap ini tidak boleh melebihi 1.0. Saat ini: {$currentTotal}, ditambah: {$data['bobot']}, total: {$newTotal}");
+        }
+
+        return BobotRules::create($data);
+    }
+
+    public function updateBobot(array $data, int $idBobot)
+    {
+        $bobot = BobotRules::findOrFail($idBobot);
+        
+        // Calculate new total for the tahap excluding current record
+        $currentTotal = BobotRules::where('tahap_id', $bobot->tahap_id)
+            ->where('id', '!=', $idBobot)
+            ->sum('bobot');
+        
+        $newBobot = $data['bobot'] ?? $bobot->bobot;
+        $newTotal = $currentTotal + $newBobot;
+
+        if ($newTotal > 1.0) {
+            throw new \Exception("Total bobot untuk tahap ini tidak boleh melebihi 1.0. Saat ini (tanpa record ini): {$currentTotal}, bobot baru: {$newBobot}, total: {$newTotal}");
+        }
+
+        $bobot->update($data);
+        return $bobot;
+    }
+
+    public function deleteBobot(int $idBobot)
+    {
+        $bobot = BobotRules::findOrFail($idBobot);
+        return $bobot->delete();
     }
 }
