@@ -223,11 +223,12 @@ class SawRepository
     public function rankingSaw()
     {
         return HasilSaw::with(['siswa', 'tahap'])
-        ->where('nilai_preferensi', '>=', 0.75)
-        ->orderBy('tahap_id', 'desc')
+        ->where('nilai_preferensi', '>=', 0.50)
         ->orderBy('nilai_preferensi', 'desc')
+        ->orderBy('tahap_id', 'desc')
         ->get()
-        ->unique('siswa_id');
+        ->unique('siswa_id')
+        ->values();
     }
 
     // BobotRules CRUD Functions

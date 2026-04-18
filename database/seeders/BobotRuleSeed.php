@@ -14,11 +14,11 @@ class BobotRuleSeed extends Seeder
     public function run(): void
     {
         $bobotPerTahap = [
-            1 => [0.2, 0.3, 0.5], // Peringatan Lisan
-            2 => [0.3, 0.4, 0.3], // SP 1
-            3 => [0.4, 0.4, 0.2], // SP 2
-            4 => [0.5, 0.2, 0.3], // Skorsing
-            5 => [0.5, 0.2, 0.3], // Dikeluarkan
+            1 => [0.2, 0.6, 0.2], // Peringatan Lisan
+            2 => [0.3, 0.5, 0.2], // SP 1
+            3 => [0.4, 0.2, 0.4], // SP 2
+            4 => [0.3, 0.4, 0.4], // Skorsing
+            5 => [0.4, 0.2, 0.4], // Dikeluarkan
         ];
 
         foreach ($bobotPerTahap as $tahapId => $bobotArray) {
